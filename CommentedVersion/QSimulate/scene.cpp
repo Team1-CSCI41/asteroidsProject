@@ -46,6 +46,12 @@ Scene::Scene( QUndoStack* undoStack ) : QGraphicsScene()
   // create invisible item to provide default top-left anchor to scene
   addLine( 0, 0, 0, 1, QPen(Qt::transparent, 1) );
 
+  qreal           x = 50;
+  qreal           y = 50;
+  Station*  station = dynamic_cast<Station*>( itemAt( x, y ) );
+  m_undoStack->push( new CommandStationAdd( this, x, y ) );
+  emit message( QString("Station add at %1,%2").arg(x).arg(y) );
+
   // connect selectionChanged signal to selectStations slot
   connect( this, SIGNAL(selectionChanged()), this, SLOT(selectStations()) );
 }
@@ -58,7 +64,7 @@ void  Scene::mousePressEvent( QGraphicsSceneMouseEvent* event )
   qreal           x = event->scenePos().x();
   qreal           y = event->scenePos().y();
   Station*  station = dynamic_cast<Station*>( itemAt( x, y ) );
-/*
+
   // if station not clicked and right mouse button pressed, create new Station
   if ( station == 0 && event->button() == Qt::LeftButton )
   {

@@ -176,7 +176,7 @@ bool  MainWindow::fileSaveAs()
 
 bool  MainWindow::fileOpen()
 {
-    Station*  station = dynamic_cast<Station*>( itemAt( x, y ) );
+   // Station*  station = dynamic_cast<Station*>( itemAt( x, y ) );
     /*
   // get user to select filename and location
   QString filename = QFileDialog::getOpenFileName();

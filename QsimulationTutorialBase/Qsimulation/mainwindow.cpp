@@ -27,62 +27,29 @@ MainWindow::MainWindow() : QMainWindow()
 {
   // add drop down menus
   QMenu*  fileMenu = menuBar()->addMenu( "&File" );
-  QMenu*  editMenu = menuBar()->addMenu( "&Edit" );
-  QMenu*  viewMenu = menuBar()->addMenu( "&View" );
-  menuBar()->addMenu( "&Simulate" );
-  menuBar()->addMenu( "&Help" );
+
 
   // create file menu options
-  QAction* newAction     = fileMenu->addAction( "&New",              this, SLOT(fileNew()) );
-  QAction* saveAction    = fileMenu->addAction( "&Save As...",       this, SLOT(fileSaveAs()) );
-  QAction* openAction    = fileMenu->addAction( "&Open ...",         this, SLOT(fileOpen()) );
+
+  //QAction* openAction    = fileMenu->addAction( "&New ...",         this, SLOT(fileOpen()) );
   fileMenu->addSeparator();
-  QAction* previewAction = fileMenu->addAction( "Print pre&view...", this, SLOT(filePrintPreview()) );
-  QAction* printAction   = fileMenu->addAction( "&Print...",         this, SLOT(filePrint()) );
+
   fileMenu->addSeparator();
                            fileMenu->addAction( "&Quit",             this, SLOT(close()) );
-  newAction->setShortcut( QKeySequence::New );
-  saveAction->setShortcut( QKeySequence::Save );
-  openAction->setShortcut( QKeySequence::Open );
-  printAction->setShortcut( QKeySequence::Print );
+
 
   // create undo stack and associated menu actions
   m_undoStack = new QUndoStack( this );
   m_undoView  = 0;
-  viewMenu->addAction( "Undo stack", this, SLOT(showUndoStack()) );
-  QAction* undoAction = m_undoStack->createUndoAction( this );
-  QAction* redoAction = m_undoStack->createRedoAction( this );
-  undoAction->setShortcut( QKeySequence::Undo );
-  redoAction->setShortcut( QKeySequence::Redo );
-  editMenu->addAction( undoAction );
-  editMenu->addAction( redoAction );
+
 
   // create toolbar, set icon size, and add actions
-  QToolBar*   toolBar = addToolBar( "Standard" );
-  QStyle*     style   = this->style();
-  QSize       size    = style->standardIcon(QStyle::SP_DesktopIcon).actualSize( QSize(99,99) );
-  toolBar->setIconSize( size );
-  newAction->setIcon( style->standardIcon(QStyle::SP_DesktopIcon) );
-  openAction->setIcon( style->standardIcon(QStyle::SP_DialogOpenButton) );
-  saveAction->setIcon( style->standardIcon(QStyle::SP_DialogSaveButton) );
-  previewAction->setIcon( style->standardIcon(QStyle::SP_FileDialogContentsView) );
-  printAction->setIcon( style->standardIcon(QStyle::SP_ComputerIcon) );
-  undoAction->setIcon( style->standardIcon(QStyle::SP_ArrowBack) );
-  redoAction->setIcon( style->standardIcon(QStyle::SP_ArrowForward) );
-  toolBar->addAction( newAction );
-  toolBar->addAction( openAction );
-  toolBar->addAction( saveAction );
-  toolBar->addSeparator();
-  toolBar->addAction( previewAction );
-  toolBar->addAction( printAction );
-  toolBar->addSeparator();
-  toolBar->addAction( undoAction );
-  toolBar->addAction( redoAction );
+
 
   // create scene and central widget view of scene
   m_scene               = new Scene( m_undoStack );
   QGraphicsView*   view = new QGraphicsView( m_scene );
-  view->setAlignment( Qt::AlignLeft | Qt::AlignTop );
+  view->setAlignment( Qt::AlignCenter );
   view->setFrameStyle( 0 );
   setCentralWidget( view );
 
@@ -91,6 +58,8 @@ MainWindow::MainWindow() : QMainWindow()
 
   // add status bar message
   statusBar()->showMessage("QSimulate has started");
+
+  setFixedSize( 1000,1000);
 }
 
 /************************************ showMessage ************************************/
@@ -119,6 +88,7 @@ void  MainWindow::showUndoStack()
 
 bool  MainWindow::fileSaveAs()
 {
+ /*
   // get user to select filename and location
   QString filename = QFileDialog::getSaveFileName();
   if ( filename.isEmpty() ) return false;
@@ -145,7 +115,7 @@ bool  MainWindow::fileSaveAs()
   // close the file and display useful message
   file.close();
   showMessage( QString("Saved to '%1'").arg(filename) );
-  return true;
+  return true;*/
 }
 
 /************************************* fileOpen **************************************/
@@ -176,7 +146,7 @@ bool  MainWindow::fileOpen()
         newScene->readStream( &stream );
       else
         stream.raiseError( QString("Unrecognised element '%1'").arg(stream.name().toString()) );
-    }
+    }bool fileSaveAs();                  // save simulation to file returning true if successful
   }
 
   // check if error occured
@@ -292,7 +262,7 @@ void  MainWindow::closeEvent( QCloseEvent* event )
   }
 
   // check if user wants to save before quitting
-  while (true)
+ /* while (true)
     switch ( QMessageBox::warning( this, "QSimulate",
         "Do you want to save before you quit?",
         QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel ) )
@@ -308,5 +278,5 @@ void  MainWindow::closeEvent( QCloseEvent* event )
       default:    // "Cancel"
         event->ignore();
         return;
-    }
+    }*/
 }

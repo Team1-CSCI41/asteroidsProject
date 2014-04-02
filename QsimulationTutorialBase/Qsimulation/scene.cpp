@@ -28,6 +28,12 @@ Scene::Scene( QUndoStack* undoStack ) : QGraphicsScene()
 
   // connect selectionChanged signal to selectStations slot
   connect( this, SIGNAL(selectionChanged()), this, SLOT(selectStations()) );
+
+  qreal           x = 0;
+  qreal           y = 0;
+  Station*  station = dynamic_cast<Station*>( itemAt( x, y ) );
+  m_undoStack->push( new CommandStationAdd( this, x, y ) );
+  emit message( QString("Station add at %1,%2").arg(x).arg(y) );
 }
 
 /********************************** mousePressEvent **********************************/
@@ -40,12 +46,12 @@ void  Scene::mousePressEvent( QGraphicsSceneMouseEvent* event )
   Station*  station = dynamic_cast<Station*>( itemAt( x, y ) );
 
   // if station not clicked and right mouse button pressed, create new Station
-  if ( station == 0 && event->button() == Qt::LeftButton )
+ /* if ( station == 0 && event->button() == Qt::LeftButton )
   {
     m_undoStack->push( new CommandStationAdd( this, x, y ) );
     emit message( QString("Station add at %1,%2").arg(x).arg(y) );
   }
-
+*/
   // call base mousePressEvent to handle other mouse press events such as selecting
   QGraphicsScene::mousePressEvent( event );
 }

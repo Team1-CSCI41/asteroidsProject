@@ -21,3 +21,6 @@ HEADERS  += mainwindow.h \
     commandstationadd.h \
     commandstationmove.h \
     commandstationdelete.h
+
+OTHER_FILES += \
+    Ship.qml

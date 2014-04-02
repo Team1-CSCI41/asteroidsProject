@@ -33,7 +33,7 @@ Station::Station( qreal x, qreal y ) : QGraphicsItem()
   // set Station pixmap and position
   setPos( x, y );
   setFlags( QGraphicsItem::ItemIsMovable |
-            QGraphicsItem::ItemIsSelectable |
+            /*QGraphicsItem::ItemIsSelectable |*/
             QGraphicsItem::ItemIgnoresTransformations );
 }
 

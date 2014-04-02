@@ -46,7 +46,7 @@ public slots:
   bool fileOpen();                    // load simulation file returning true if successful
   //void filePrintPreview();            // display print preview dialog
   //void filePrint();                   // display print dialog
-  //void print( QPrinter* );            // draw print page
+  void print( QPrinter* );            // draw print page
 
 protected:
   void closeEvent( QCloseEvent* );    // check if user really wants to exit

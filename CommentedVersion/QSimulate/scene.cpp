@@ -58,7 +58,7 @@ void  Scene::mousePressEvent( QGraphicsSceneMouseEvent* event )
   qreal           x = event->scenePos().x();
   qreal           y = event->scenePos().y();
   Station*  station = dynamic_cast<Station*>( itemAt( x, y ) );
-
+/*
   // if station not clicked and right mouse button pressed, create new Station
   if ( station == 0 && event->button() == Qt::LeftButton )
   {
@@ -104,7 +104,7 @@ void  Scene::selectStations()
 /********************************* mouseReleaseEvent *********************************/
 
 void  Scene::mouseReleaseEvent( QGraphicsSceneMouseEvent* event )
-{
+{/*
   // if any stations moved, then create undo commands
   foreach( StationPos station , m_stations )
     if ( station.first->pos() != station.second )
@@ -114,7 +114,7 @@ void  Scene::mouseReleaseEvent( QGraphicsSceneMouseEvent* event )
 
   // refresh record of selected stations and call base mouseReleaseEvent
   selectStations();
-  QGraphicsScene::mouseReleaseEvent( event );
+  QGraphicsScene::mouseReleaseEvent( event );*/
 }
 
 /************************************ writeStream ************************************/

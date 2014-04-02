@@ -20,8 +20,11 @@
 
 #include "mainwindow.h"
 #include "scene.h"
+#include "station.h"
 
 #include <QMenuBar>
+#include <QGraphicsSceneMouseEvent>
+#include <QGraphicsSceneContextMenuEvent>
 #include <QStatusBar>
 #include <QGraphicsView>
 #include <QUndoStack>
@@ -173,6 +176,8 @@ bool  MainWindow::fileSaveAs()
 
 bool  MainWindow::fileOpen()
 {
+    Station*  station = dynamic_cast<Station*>( itemAt( x, y ) );
+    /*
   // get user to select filename and location
   QString filename = QFileDialog::getOpenFileName();
   if ( filename.isEmpty() ) return false;
@@ -218,6 +223,7 @@ bool  MainWindow::fileOpen()
   m_scene = newScene;
   showMessage( QString("Loaded '%1'").arg(filename) );
   return true;
+    */
 }
 
 /********************************* filePrintPreview **********************************/
@@ -242,7 +248,7 @@ bool  MainWindow::fileOpen()
 }
 */
 /*************************************** print ***************************************/
-/*
+
 void  MainWindow::print( QPrinter* printer )
 {
   // create painter for drawing print page
@@ -266,7 +272,7 @@ void  MainWindow::print( QPrinter* printer )
   page.adjust( w/20, h/20, -w/20, -h/20 );
   m_scene->render( &painter, page );
 }
-*/
+
 /************************************** fileNew **************************************/
  /*
 void  MainWindow::fileNew()

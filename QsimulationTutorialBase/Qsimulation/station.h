@@ -15,6 +15,12 @@ public:
   void     paint( QPainter*,
                   const QStyleOptionGraphicsItem*,
                   QWidget* );                       // implement virtual paint function
+  void     paintAsteroid( QPainter*,
+                  const QStyleOptionGraphicsItem*,
+                  QWidget* );
+  void     paintBullet( QPainter*,
+                  const QStyleOptionGraphicsItem*,
+                  QWidget* );
   QRectF   boundingRect() const
     { return QRectF(-6.5, -13, 13, 18); }           // implement virtual boundingRect
 };

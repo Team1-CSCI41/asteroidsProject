@@ -3,7 +3,7 @@
 #include "commandstationadd.h"
 #include "commandstationdelete.h"
 #include "commandstationmove.h"
-
+#include <QTimer>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsSceneContextMenuEvent>
 #include <QMenu>
@@ -17,6 +17,7 @@
 /*************************************************************************************/
 
 /************************************ constuctor *************************************/
+
 
 Scene::Scene( QUndoStack* undoStack ) : QGraphicsScene()
 {
@@ -34,6 +35,8 @@ Scene::Scene( QUndoStack* undoStack ) : QGraphicsScene()
   Station*  station = dynamic_cast<Station*>( itemAt( x, y ) );
   m_undoStack->push( new CommandStationAdd( this, x, y ) );
   emit message( QString("Station add at %1,%2").arg(x).arg(y) );
+
+
 }
 
 /********************************** mousePressEvent **********************************/

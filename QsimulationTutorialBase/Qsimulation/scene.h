@@ -14,6 +14,7 @@ class Station;
 /******************** Scene representing the simulated landscape *********************/
 /*************************************************************************************/
 
+
 class Scene : public QGraphicsScene
 {
   Q_OBJECT

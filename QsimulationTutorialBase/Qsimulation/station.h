@@ -15,6 +15,9 @@ public:
   void     paint( QPainter*,
                   const QStyleOptionGraphicsItem*,
                   QWidget* );                       // implement virtual paint function
+  void     paintShip( QPainter*,
+                  const QStyleOptionGraphicsItem*,
+                  QWidget* );
   void     paintAsteroid( QPainter*,
                   const QStyleOptionGraphicsItem*,
                   QWidget* );
@@ -23,6 +26,8 @@ public:
                   QWidget* );
   QRectF   boundingRect() const
     { return QRectF(-6.5, -13, 13, 18); }           // implement virtual boundingRect
+protected:
+  QTimer * timer;
 };
 
 #endif  // STATION_H

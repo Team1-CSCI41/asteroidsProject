@@ -1,3 +1,4 @@
+
 #ifndef COMMANDSTATIONDELETE_H
 #define COMMANDSTATIONDELETE_H
 
@@ -15,7 +16,7 @@ public:
   {
     m_scene   = scene;
     m_station = station;
-    setText( QString("Station delete %1,%2").arg(station->x()).arg(station->y()) );
+    setText( QString("station delete %1,%2").arg(station->x()).arg(station->y()) );
   }
 
   virtual void undo()    { m_scene->addItem( m_station ); }

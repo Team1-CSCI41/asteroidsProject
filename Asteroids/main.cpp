@@ -6,9 +6,9 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     KeyPress *keyPress=new KeyPress();
-    keyPress->show();
+   // keyPress->show();
     MainWindow w;
     w.show();
-
+    
     return a.exec();
 }

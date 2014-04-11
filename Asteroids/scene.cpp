@@ -1,3 +1,22 @@
+/***************************************************************************
+ *   Copyright (C) 2009 by Richard Crook                                   *
+ *   richard@dazzle.plus.com                                               *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
 #include "asteroid.h"
 #include "bullet.h"
 #include "mainwindow.h"
@@ -95,8 +114,9 @@ void  Scene::manageObjects()
   qreal asteroidMoveY = 3;
   qreal bulletMoveX = 4;
   qreal bulletMoveY = 6;
-  qreal xDest;
-  qreal yDest;
+  qreal xDest=0;
+  qreal yDest=0;
+  {
 
   //***ASTEROID:
 
@@ -108,7 +128,7 @@ void  Scene::manageObjects()
   if(xDest < 0)             xDest += WINDOW_WIDTH - 1;
   if(xDest > WINDOW_WIDTH)  xDest -= WINDOW_WIDTH;
   if(yDest < 0)             yDest += WINDOW_HEIGHT - 1;
-  case Qt::Key_A:  if(yDest > WINDOW_HEIGHT) yDest -= WINDOW_HEIGHT;
+  if(yDest > WINDOW_HEIGHT) yDest -= WINDOW_HEIGHT;
 
   //Delete asteroid from old position
   Asteroid* asteroid = dynamic_cast<Asteroid*>(itemAt(asteroidX, asteroidY));
@@ -129,7 +149,7 @@ void  Scene::manageObjects()
   yDest = bulletY + bulletMoveY;
 
   //If bullet moves off screen, wrap to other side
-  if(xDest < 0)             xDest += WINDOW_WIDTH - 1;
+  if(xDest <0)             xDest += WINDOW_WIDTH - 1;
   if(xDest > WINDOW_WIDTH)  xDest -= WINDOW_WIDTH;
   if(yDest < 0)             yDest += WINDOW_HEIGHT - 1;
   if(yDest > WINDOW_HEIGHT) yDest -= WINDOW_HEIGHT;
@@ -169,6 +189,7 @@ void  Scene::manageObjects()
   stationX = xDest;
   stationY = yDest;
 
+    }
 }
 
 /********************************** mousePressEvent **********************************/
@@ -278,30 +299,31 @@ void  Scene::readStream( QXmlStreamReader* stream )
 
 void Scene:: keyPressEvent(QKeyEvent *event)
 {
-
+/*
     switch(event->key())
     {
         case Qt::Key_A:
-
+        //case Qt::Key_a:
         {
             stationRotation += 5;
             if(stationRotation > 359) stationRotation -= 360;
         }
 
         case Qt::Key_D:
-
+        //case Qt::Key_d:
         {
             stationRotation += 5;
             if(stationRotation < 0) stationRotation += 360;
         }
 
         case Qt::Key_W:
-
+        //case Qt::Key_w:
         {
             stationMoveX += 2 * qCos(stationRotation * PI / 180);
             stationMoveY += 2 * qSin(stationRotation * PI / 180);
         }
     }
+    */
 }
 
 

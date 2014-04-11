@@ -1,12 +1,12 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2014-03-26T12:04:11
+# Project created by QtCreator 2014-04-02T12:14:53
 #
 #-------------------------------------------------
 
 QT       += core gui
 
-TARGET = Qsimulation
+TARGET = Asteroids
 TEMPLATE = app
 
 
@@ -14,25 +14,24 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     scene.cpp \
     station.cpp \
-    bullet.cpp \
     asteroid.cpp \
+    bullet.cpp \
     keypress.cpp
 
 HEADERS  += mainwindow.h \
     scene.h \
-    station.h \
     commandstationadd.h \
     commandstationmove.h \
     commandstationdelete.h \
-    bullet.h \
+    station.h \
     asteroid.h \
-    keypress.h \
+    bullet.h \
     commandbulletadd.h \
     commandbulletdelete.h \
     commandbulletmove.h \
     commandasteroidadd.h \
     commandasteroiddelete.h \
-    commandasteroidmove.h
+    commandasteroidmove.h \
+    keypress.h
 
-OTHER_FILES += \
-    Ship.qml
+FORMS    += mainwindow.ui

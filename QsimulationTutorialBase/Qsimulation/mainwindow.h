@@ -1,5 +1,9 @@
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+
+const int WINDOW_WIDTH=600;
+const int WINDOW_HEIGHT=600;
 
 class Scene;
 class QUndoStack;

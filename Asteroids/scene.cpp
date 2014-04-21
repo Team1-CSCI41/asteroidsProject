@@ -61,6 +61,23 @@ qreal           stationMoveY = 0;
 Scene::Scene( QUndoStack* undoStack ) : QGraphicsScene()
 {
   // create timer
+  for (double k=0; k<=359; k=k+1)
+  {
+       // These two lines throw a casting error.
+      //
+      //
+      //
+      //sine[k]=qSin(k*PI/180);
+      //cosine[k]=qCos(k*PI/180);
+      //
+      //
+      //
+      //
+      //
+
+  }
+
+
   QTimer *timer = new QTimer(this);
   connect(timer, SIGNAL(timeout()), this, SLOT(manageObjects()));
   //connect(timer, SIGNAL(timeout()), this, SLOT(collisionDetection()));
@@ -116,9 +133,6 @@ void  Scene::manageObjects()
 
   qreal bulletMoveX = 4;
   qreal bulletMoveY = 6;
-
-  qreal stationMoveX = 2;
-  qreal stationMoveY = 2;
 
   qreal xDest=0;
   qreal yDest=0;
@@ -241,7 +255,7 @@ void  Scene::contextMenuEvent( QGraphicsSceneContextMenuEvent* event )
 /********************************** selectStations ***********************************/
 
 void  Scene::selectStations()
-{
+{m_undoStack->push( new CommandBulletAdd( this, bulletX, bulletY ) );
   // refresh record of selected stations and their starting positions
   m_stations.clear();
   foreach( QGraphicsItem* item, selectedItems() )
@@ -305,31 +319,49 @@ void  Scene::readStream( QXmlStreamReader* stream )
 
 void Scene:: keyPressEvent(QKeyEvent *event)
 {
-/*
+
     switch(event->key())
     {
-        case Qt::Key_A:
+       /* case Qt::Key_A:
         //case Qt::Key_a:
         {
-            stationRotation += 5;
+            stationRotation =(station_orientation+5)*PI/180;
             if(stationRotation > 359) stationRotation -= 360;
+            break;
         }
 
         case Qt::Key_D:
         //case Qt::Key_d:
         {
-            stationRotation += 5;
+            stationRotation =(station_orientation-5)*PI/180;
             if(stationRotation < 0) stationRotation += 360;
+            break;
         }
-
+        */
         case Qt::Key_W:
         //case Qt::Key_w:
         {
-            stationMoveX += 2 * qCos(stationRotation * PI / 180);
-            stationMoveY += 2 * qSin(stationRotation * PI / 180);
+            //stationMoveX += 2 * qCos(stationRotation * PI / 180);
+            stationMoveY -= 2;
+            break;
+        }
+
+        case Qt::Key_S:
+         //case Qt::Key_w:
+        {
+             //stationMoveX += 2 * qCos(stationRotation * PI / 180);
+             stationMoveY += 2;
+             break;
+        }
+
+        case Qt::Key_Space:
+        {
+            m_undoStack->push( new CommandBulletAdd( this, bulletX, bulletY ) );
+            emit message( QString("Bullet add at %1,%2").arg(bulletX).arg(bulletY) );
+            break;
         }
     }
-    */
+
 }
 
 

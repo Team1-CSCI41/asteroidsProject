@@ -15,8 +15,7 @@ SOURCES += main.cpp\
     scene.cpp \
     station.cpp \
     asteroid.cpp \
-    bullet.cpp \
-    keypress.cpp
+    bullet.cpp
 
 HEADERS  += mainwindow.h \
     scene.h \
@@ -31,7 +30,6 @@ HEADERS  += mainwindow.h \
     commandbulletmove.h \
     commandasteroidadd.h \
     commandasteroiddelete.h \
-    commandasteroidmove.h \
-    keypress.h
+    commandasteroidmove.h
 
 FORMS    += mainwindow.ui

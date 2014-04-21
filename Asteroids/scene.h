@@ -56,6 +56,7 @@ protected:
   void  mouseReleaseEvent( QGraphicsSceneMouseEvent* );      // receive mouse release events
   void  contextMenuEvent( QGraphicsSceneContextMenuEvent* ); // receive context menu events
   void  keyPressEvent(QKeyEvent *event);
+  qreal sine[360], cosine[360];
 
 private:
   typedef QPair<Station*,QPointF>     StationPos;

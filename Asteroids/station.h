@@ -36,7 +36,7 @@ public:
                   const QStyleOptionGraphicsItem*,
                   QWidget* );                       // implement virtual paint function for Ship
   QRectF   boundingRect() const
-    { return QRectF(-6.5, -13, 13, 18); }           // implement virtual boundingRect
+    { return QRectF(-46.5, -53, 73, 58); }           // implement virtual boundingRect
     //{ return QRectF(-6.5, -16.5, 13, 18); }           // implement virtual boundingRect
   int stationRotation;
 private:

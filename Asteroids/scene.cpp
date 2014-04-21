@@ -68,6 +68,7 @@ Scene::Scene( QUndoStack* undoStack ) : QGraphicsScene()
 
   // initialise variables
   m_undoStack     = undoStack;
+  this->setSceneRect(0,0,WINDOW_WIDTH-20, WINDOW_HEIGHT-40);
 
   // create invisible item to provide default top-left anchor to scene
   addLine( 0, 0, 0, 1, QPen(Qt::transparent, 1) );
@@ -76,8 +77,8 @@ Scene::Scene( QUndoStack* undoStack ) : QGraphicsScene()
   connect( this, SIGNAL(selectionChanged()), this, SLOT(selectStations()) );
 
   // set local variables and check if existing station clicked
-  qreal           stationX = 0.5*WINDOW_WIDTH;
-  qreal           stationY = 0.45*WINDOW_HEIGHT;
+  qreal           stationX = .5*WINDOW_WIDTH;
+  qreal           stationY = .45*WINDOW_HEIGHT;
   qreal           asteroidX = 0.75*WINDOW_WIDTH;
   qreal           asteroidY = 0.75*WINDOW_HEIGHT;
   qreal           bulletX = 0.25*WINDOW_WIDTH;
@@ -112,8 +113,13 @@ void  Scene::manageObjects()
 {
   qreal asteroidMoveX = 2;
   qreal asteroidMoveY = 3;
+
   qreal bulletMoveX = 4;
   qreal bulletMoveY = 6;
+
+  qreal stationMoveX = 2;
+  qreal stationMoveY = 2;
+
   qreal xDest=0;
   qreal yDest=0;
   {

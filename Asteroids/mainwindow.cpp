@@ -102,7 +102,7 @@ MainWindow::MainWindow() : QMainWindow()
   // create scene and central widget view of scene
   m_scene               = new Scene( m_undoStack );
   QGraphicsView*   view = new QGraphicsView( m_scene );
-  view->setAlignment( Qt::AlignCenter );
+  view->setAlignment( Qt::AlignLeft | Qt::AlignTop );
   view->setFrameStyle( 0 );
   setCentralWidget( view );
 

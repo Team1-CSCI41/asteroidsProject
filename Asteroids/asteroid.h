@@ -12,7 +12,7 @@ public:
                   const QStyleOptionGraphicsItem*,
                   QWidget* );                       // implement virtual paint function for Ship
   QRectF   boundingRect() const
-    { return QRectF(-6.5, -13, 13, 18); }           // implement virtual boundingRect
+    { return QRectF(-9,  -9,  13,   13); }           // implement virtual boundingRect
 };
 
 #endif // ASTEROID_H

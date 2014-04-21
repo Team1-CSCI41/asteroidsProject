@@ -29,9 +29,11 @@ using namespace std;
 
 extern int   stationRotation = 90;
 qreal sine[360], cosine[360];
-qreal shipCoord[21] = { 0, +3.125, -3.125, -4.6875, +6.25, -6.25, -9.375, +12.5, -12.5,
-          +14.0625, -14.0625, +15.625, -15.625, +18.75, -18.75, -21.875
-          +25, -25, -26.5625, -28.125, -46.875};
+qreal shipCoord[21] = { 0, +3.125, -3.125, -4.6875, +6.25,
+                        -6.25, -9.375, +12.5, -12.5, +14.0625,
+                        -14.0625, +15.625, -15.625, +18.75, -18.75,
+                        -21.875  +25, -25, -26.5625, -28.125,
+                        -46.875};
 
 
 
@@ -69,7 +71,8 @@ void  Station::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     painter->setPen( QPen( Qt::blue, 2 ) );
     painter->drawLine( shipCoord[0],  shipCoord[6],  shipCoord[1],  shipCoord[12]);
     painter->drawLine( shipCoord[1],  shipCoord[12],  shipCoord[0],  -21.875);
-    //cout<<shipCoord[15]<<endl;
+
+    cout<<shipCoord[15]<<endl;
 
     painter->drawLine( shipCoord[0],  shipCoord[6],  shipCoord[2],  shipCoord[12]);
     painter->drawLine( shipCoord[2],  shipCoord[12],  shipCoord[0],  -21.875);

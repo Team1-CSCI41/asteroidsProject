@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "station.h"
+#include "scene.h"
 #include <QPainter>
 #include <QtCore/qmath.h>
 #include <iostream>
@@ -27,8 +28,8 @@ using namespace std;
 
 #define PI 3.14159265
 
-extern int   stationRotation = 90;
-qreal sine[360], cosine[360];
+
+
 
 
 
@@ -41,6 +42,7 @@ qreal sine[360], cosine[360];
 /************************************ constuctor *************************************/
 Station::Station()
 {
+ //    stationRotation= 90;
 }
 
 Station::Station( qreal x, qreal y ) : QGraphicsItem()
@@ -50,12 +52,8 @@ Station::Station( qreal x, qreal y ) : QGraphicsItem()
   setFlags( QGraphicsItem::ItemIgnoresTransformations );
             //QGraphicsItem::ItemIsMovable |
            // QGraphicsItem::ItemIsSelectable |
-  int i;
-  for(i=0; i <=359; i++)
-  {
-      sine[i]   = qSin(i * PI / 180);
-      cosine[i] = qCos(i * PI / 180);
-  }
+ // stationRotation= 90;
+
 }
 
 /************************************** paintShip ****************************************/
@@ -67,10 +65,11 @@ void  Station::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
   //Create Plane
 
     painter->setPen( QPen( Qt::green, 2 ) );
-    painter->drawLine( +10,  +0,  +0,  -5 );
-    painter->drawLine(  +0,  -5,  -10,  +0 );
-    painter->drawLine( -10,  +0,  +0,  -20 );
-    painter->drawLine( +0,  -20 ,  +10,  +0 );
+    painter->drawLine( +10*qCos((stationRotation-90)*PI/180),+10*qSin((stationRotation-90)*PI/180),  5*qCos((stationRotation+180)*PI/180),5*qSin((stationRotation+180)*PI/180) );
+    painter->drawLine(  +5*qCos((stationRotation+180)*PI/180),5*qSin((stationRotation+180)*PI/180),  +10*qCos((stationRotation+90)*PI/180),+10*qSin((stationRotation+90)*PI/180));
+    painter->drawLine( +10*qCos((stationRotation+90)*PI/180),+10*qSin((stationRotation+90)*PI/180),  +20*qCos((stationRotation+180)*PI/180),+20*qSin((stationRotation+180)*PI/180) );
+    painter->drawLine( +20*qCos((stationRotation+180)*PI/180),+20*qSin((stationRotation+180)*PI/180),  +10*qCos((stationRotation-90)*PI/180),  +10*qSin((stationRotation-90)*PI/180) );
+    cout<<stationRotation<<endl;
 
 
 }

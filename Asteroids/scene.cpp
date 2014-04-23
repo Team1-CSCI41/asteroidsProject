@@ -41,6 +41,10 @@
 #include <QTimer>
 #include <QKeyEvent>
 #include <QtCore/qmath.h>
+#include <iostream>
+
+using namespace std;
+int stationRotation=90;
 
 #define PI 3.14159265
 
@@ -52,6 +56,9 @@ qreal           bulletX = 0.25*WINDOW_WIDTH;
 qreal           bulletY = 0.25*WINDOW_HEIGHT;
 qreal           stationMoveX = 0;
 qreal           stationMoveY = 0;
+qreal           bulletMoveX = 4;
+qreal           bulletMoveY = 6;
+
 /*************************************************************************************/
 /******************** Scene representing the simulated landscape *********************/
 /*************************************************************************************/
@@ -61,19 +68,13 @@ qreal           stationMoveY = 0;
 Scene::Scene( QUndoStack* undoStack ) : QGraphicsScene()
 {
   // create timer
-  for (double k=0; k<=359; k=k+1)
+  for (int k=0; k<=359; k=k+1)
   {
        // These two lines throw a casting error.
-      //
-      //
-      //
-      //sine[k]=qSin(k*PI/180);
-      //cosine[k]=qCos(k*PI/180);
-      //
-      //
-      //
-      //
-      //
+
+      sine[k]=qSin(k*PI/180);
+      cosine[k]=qCos(k*PI/180);
+
 
   }
 
@@ -104,13 +105,13 @@ Scene::Scene( QUndoStack* undoStack ) : QGraphicsScene()
   qreal           asteroidMoveY = -1;
   qreal           xDest, yDest;
 
-  Station*  station = dynamic_cast<Station*>( itemAt( stationX, stationY ) );
+  station = dynamic_cast<Station*>( itemAt( stationX, stationY ) );
   Asteroid*  asteroid = dynamic_cast<Asteroid*>( itemAt( asteroidX, asteroidY) );
   Bullet*  bullet = dynamic_cast<Bullet*>( itemAt( bulletX, bulletY ) );
 
   m_undoStack->push( new CommandStationAdd( this, stationX, stationY ) );
   m_undoStack->push( new CommandAsteroidAdd( this, asteroidX, asteroidY ) );
-  m_undoStack->push( new CommandBulletAdd( this, bulletX, bulletY ) );
+  m_undoStack->push( new CommandBulletAdd( this, bulletX, bulletY, bulletMoveX, bulletMoveY ) );
   emit message( QString("Ship add at %1,%2").arg(stationX).arg(stationY) );
   emit message( QString("Asteroid add at %1,%2").arg(asteroidX).arg(asteroidY) );
   emit message( QString("Bullet add at %1,%2").arg(bulletX).arg(bulletY) );
@@ -130,9 +131,6 @@ void  Scene::manageObjects()
 {
   qreal asteroidMoveX = 2;
   qreal asteroidMoveY = 3;
-
-  qreal bulletMoveX = 4;
-  qreal bulletMoveY = 6;
 
   qreal xDest=0;
   qreal yDest=0;
@@ -157,7 +155,7 @@ void  Scene::manageObjects()
   //Draw asteroid at new position
   dynamic_cast<Asteroid*>(itemAt(xDest, yDest));
   m_undoStack->push(new CommandAsteroidAdd(this, xDest, yDest));
-
+int   stationRotation = 90;
   //Update position to new position
   asteroidX = xDest;
   asteroidY = yDest;
@@ -180,7 +178,7 @@ void  Scene::manageObjects()
 
   //Draw bullet at new position
   dynamic_cast<Bullet*>(itemAt(xDest, yDest));
-  m_undoStack->push(new CommandBulletAdd(this, xDest, yDest));
+  m_undoStack->push(new CommandBulletAdd(this, xDest, yDest, bulletMoveX, bulletMoveY));
 
   //Update position to new position
   bulletX = xDest;
@@ -255,7 +253,7 @@ void  Scene::contextMenuEvent( QGraphicsSceneContextMenuEvent* event )
 /********************************** selectStations ***********************************/
 
 void  Scene::selectStations()
-{m_undoStack->push( new CommandBulletAdd( this, bulletX, bulletY ) );
+{m_undoStack->push( new CommandBulletAdd( this, bulletX, bulletY, bulletMoveX, bulletMoveY) );
   // refresh record of selected stations and their starting positions
   m_stations.clear();
   foreach( QGraphicsItem* item, selectedItems() )
@@ -322,43 +320,64 @@ void Scene:: keyPressEvent(QKeyEvent *event)
 
     switch(event->key())
     {
-       /* case Qt::Key_A:
-        //case Qt::Key_a:
+
+        case Qt::Key_Left:
         {
-            stationRotation =(station_orientation+5)*PI/180;
-            if(stationRotation > 359) stationRotation -= 360;
-            break;
+             stationRotation = (stationRotation - 10) % 360;
+             cout << stationRotation << endl;//for debugging
+             if(stationRotation > 359) stationRotation -= 360; //Defensive
+             break;
         }
 
-        case Qt::Key_D:
-        //case Qt::Key_d:
-        {
-            stationRotation =(station_orientation-5)*PI/180;
-            if(stationRotation < 0) stationRotation += 360;
-            break;
+         case Qt::Key_Right:
+         {
+                stationRotation = (stationRotation + 10) % 360;
+                cout << stationRotation << endl;//for debugging
+                if(stationRotation < 0) stationRotation += 360; //Defensive
+                break;
         }
-        */
-        case Qt::Key_W:
+
+        case Qt::Key_Up:
         //case Qt::Key_w:
         {
-            //stationMoveX += 2 * qCos(stationRotation * PI / 180);
-            stationMoveY -= 2;
+            if((stationMoveY+stationMoveX)>-20)
+            {
+                stationMoveX +=2*qCos((stationRotation + 180) * PI / 180);
+                stationMoveY +=2*qSin((stationRotation + 180) * PI / 180);
+
+            }
+
             break;
         }
 
-        case Qt::Key_S:
+        case Qt::Key_Down:
          //case Qt::Key_w:
         {
-             //stationMoveX += 2 * qCos(stationRotation * PI / 180);
-             stationMoveY += 2;
+            if((stationMoveY+stationMoveX)<=0 && (stationMoveY+stationMoveX)>=-20)
+            {
+                stationMoveX +=2*qCos(stationRotation * PI / 180);
+                stationMoveY +=2*qSin(stationRotation * PI / 180);
+            }
+
              break;
         }
 
         case Qt::Key_Space:
         {
-            m_undoStack->push( new CommandBulletAdd( this, bulletX, bulletY ) );
-            emit message( QString("Bullet add at %1,%2").arg(bulletX).arg(bulletY) );
-            break;
+
+
+                //Calculate bullet location, in front of ship's "nose"
+                bulletX = stationX + ( 22 * qCos(stationRotation * PI / 180) + 2.25);
+                bulletY = stationY +  (-22 * qSin(stationRotation * PI / 180) - 2.5);
+                //Calculate bullet's velocity based on
+                bulletMoveX = stationMoveX + 5 * qCos(stationRotation * PI / 180);
+                bulletMoveY = stationMoveY -5 * qSin(stationRotation * PI / 180);
+                //Instantiate bullet, add to list, and draw it
+                Bullet *bullet = new Bullet(bulletX, bulletY, bulletMoveX, bulletMoveY);
+                m_undoStack->push(new CommandBulletAdd
+                    (this, bulletX, bulletY, bulletMoveX, bulletMoveY));
+                break;
+
         }
     }
 

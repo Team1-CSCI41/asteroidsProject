@@ -6,13 +6,15 @@ Bullet::Bullet()
 {
 }
 
-Bullet::Bullet( qreal x, qreal y ) : QGraphicsItem()
+Bullet::Bullet( qreal x, qreal y, qreal xm, qreal ym ) : QGraphicsItem()
 {
   // set Bullet pixmap and position
   setPos( x, y );
   setFlags( QGraphicsItem::ItemIgnoresTransformations );
             //QGraphicsItem::ItemIsMovable |
            // QGraphicsItem::ItemIsSelectable |
+  xmove=xm;
+  ymove=ym;
 }
 
 void  Bullet::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

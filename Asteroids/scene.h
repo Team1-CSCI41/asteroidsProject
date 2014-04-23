@@ -57,7 +57,7 @@ protected:
   void  contextMenuEvent( QGraphicsSceneContextMenuEvent* ); // receive context menu events
   void  keyPressEvent(QKeyEvent *event);
   qreal sine[360], cosine[360];
-
+  Station*  station;
 private:
   typedef QPair<Station*,QPointF>     StationPos;
   QList<StationPos>   m_stations;             // currently selected stations & start positions

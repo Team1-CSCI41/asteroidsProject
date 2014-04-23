@@ -11,9 +11,9 @@
 class CommandBulletAdd : public QUndoCommand
 {
 public:
-  CommandBulletAdd( QGraphicsScene* scene, qreal x, qreal y )
+  CommandBulletAdd( QGraphicsScene* scene, qreal x, qreal y, qreal xmove , qreal ymove )
     {
-      m_bullet = new Bullet( x, y );
+      m_bullet = new Bullet( x, y, xmove, ymove );
       m_scene   = scene;
       setText( QString("Bullet add %1,%2").arg(x).arg(y) );
     }

@@ -22,7 +22,7 @@
 #define STATION_H
 
 #include <QGraphicsItem>
-//extern int station_orientation=90;
+
 
 /*************************************************************************************/
 /******************* Represents a radio station in the simulation ********************/
@@ -37,15 +37,11 @@ public:
                   const QStyleOptionGraphicsItem*,
                   QWidget* );                       // implement virtual paint function for Ship
   QRectF   boundingRect() const
-    { return QRectF(-26, -51, 52, 52); }           // implement virtual boundingRect
+    { return QRectF( -21, -21, 42, 42); }           // implement virtual boundingRect
     //{ return QRectF(-6.5, -16.5, 13, 18); }           // implement virtual boundingRect
-  int stationRotation;
 
-  /*
-    qreal shipCoord[21] = { 0, +3.125, -3.125, -4.6875, +6.25, -6.25, -9.375, +12.5, -12.5,
-              +14.0625, -14.0625, +15.625, -15.625, +18.75, -18.75, -21.875
-              +25, -25, -26.5625, -28.125, -46.875};
-    */
+
+ //int   stationRotation;
 private:
   qreal xPos;
   qreal yPos;

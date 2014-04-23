@@ -41,6 +41,7 @@
 #include <QTimer>
 #include <QKeyEvent>
 #include <QtCore/qmath.h>
+#include <QList>
 
 #define PI 3.14159265
 
@@ -52,6 +53,8 @@ qreal           bulletX = 0.25*WINDOW_WIDTH;
 qreal           bulletY = 0.25*WINDOW_HEIGHT;
 qreal           stationMoveX = 0;
 qreal           stationMoveY = 0;
+
+QList <Asteroid*> *listOfAsteroids = new QList <Asteroid*>;
 /*************************************************************************************/
 /******************** Scene representing the simulated landscape *********************/
 /*************************************************************************************/
@@ -87,6 +90,7 @@ Scene::Scene( QUndoStack* undoStack ) : QGraphicsScene()
   m_undoStack     = undoStack;
   this->setSceneRect(0,0,WINDOW_WIDTH-20, WINDOW_HEIGHT-40);
 
+
   // create invisible item to provide default top-left anchor to scene
   addLine( 0, 0, 0, 1, QPen(Qt::transparent, 1) );
 
@@ -96,24 +100,39 @@ Scene::Scene( QUndoStack* undoStack ) : QGraphicsScene()
   // set local variables and check if existing station clicked
   qreal           stationX = .5*WINDOW_WIDTH;
   qreal           stationY = .45*WINDOW_HEIGHT;
-  qreal           asteroidX = 0.75*WINDOW_WIDTH;
-  qreal           asteroidY = 0.75*WINDOW_HEIGHT;
+  qreal           asteroidX[4] = {0.75*WINDOW_WIDTH,0.65*WINDOW_WIDTH , 0.55*WINDOW_WIDTH, 0.45*WINDOW_WIDTH};
+  qreal           asteroidY[4] = {0.75*WINDOW_WIDTH,0.65*WINDOW_WIDTH , 0.55*WINDOW_WIDTH, 0.45*WINDOW_WIDTH};
   qreal           bulletX = 0.25*WINDOW_WIDTH;
   qreal           bulletY = 0.25*WINDOW_HEIGHT;
   qreal           asteroidMoveX = -1;
   qreal           asteroidMoveY = -1;
   qreal           xDest, yDest;
 
-  Station*  station = dynamic_cast<Station*>( itemAt( stationX, stationY ) );
-  Asteroid*  asteroid = dynamic_cast<Asteroid*>( itemAt( asteroidX, asteroidY) );
-  Bullet*  bullet = dynamic_cast<Bullet*>( itemAt( bulletX, bulletY ) );
 
+
+
+
+
+  Station*  station = dynamic_cast<Station*>( itemAt( stationX, stationY ) );
   m_undoStack->push( new CommandStationAdd( this, stationX, stationY ) );
-  m_undoStack->push( new CommandAsteroidAdd( this, asteroidX, asteroidY ) );
-  m_undoStack->push( new CommandBulletAdd( this, bulletX, bulletY ) );
   emit message( QString("Ship add at %1,%2").arg(stationX).arg(stationY) );
-  emit message( QString("Asteroid add at %1,%2").arg(asteroidX).arg(asteroidY) );
+
+  for(int i=0; i<=4; i++){
+      Asteroid*  asteroid = dynamic_cast<Asteroid*>( itemAt( asteroidX[i], asteroidY[i]) );
+      listOfAsteroids->append(asteroid);
+      m_undoStack->push( new CommandAsteroidAdd( this, asteroidX[i], asteroidY[i] ) );
+      emit message( QString("Asteroid add at %1,%2").arg(asteroidX[i]).arg(asteroidY[i]) );
+  }
+
+  Bullet*  bullet = dynamic_cast<Bullet*>( itemAt( bulletX, bulletY ) );
+  m_undoStack->push( new CommandBulletAdd( this, bulletX, bulletY ) );
   emit message( QString("Bullet add at %1,%2").arg(bulletX).arg(bulletY) );
+
+
+
+
+
+
 
   /*
   asteroid = dynamic_cast<Asteroid*>( itemAt( asteroidX, asteroidY ));
@@ -141,8 +160,8 @@ void  Scene::manageObjects()
   //***ASTEROID:
 
   //Calculate new location
-  xDest = asteroidX + asteroidMoveX;
-  yDest = asteroidY + asteroidMoveY;
+      xDest = asteroidX + asteroidMoveX;
+      yDest = asteroidY + asteroidMoveY;
 
   //If asteroid moves off screen, wrap to other side
   if(xDest < 0)             xDest += WINDOW_WIDTH - 1;
@@ -338,7 +357,7 @@ void Scene:: keyPressEvent(QKeyEvent *event)
             break;
         }
         */
-        case Qt::Key_W:
+        case Qt::Key_Up:
         //case Qt::Key_w:
         {
             //stationMoveX += 2 * qCos(stationRotation * PI / 180);
@@ -346,7 +365,7 @@ void Scene:: keyPressEvent(QKeyEvent *event)
             break;
         }
 
-        case Qt::Key_S:
+        case Qt::Key_Down:
          //case Qt::Key_w:
         {
              //stationMoveX += 2 * qCos(stationRotation * PI / 180);

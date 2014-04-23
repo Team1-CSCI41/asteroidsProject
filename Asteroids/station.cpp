@@ -72,9 +72,6 @@ void  Station::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     painter->setPen( QPen( Qt::blue, 2 ) );
     painter->drawLine( shipCoord[0],  shipCoord[6],  shipCoord[1],  shipCoord[12]);
     painter->drawLine( shipCoord[1],  shipCoord[12],  shipCoord[0],  shipCoord[15]);
-
-    cout<<shipCoord[15]<<endl;
-
     painter->drawLine( shipCoord[0],  shipCoord[6],  shipCoord[2],  shipCoord[12]);
     painter->drawLine( shipCoord[2],  shipCoord[12],  shipCoord[0],  shipCoord[15]);
 

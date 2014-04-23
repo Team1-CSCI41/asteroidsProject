@@ -45,6 +45,9 @@
 
 MainWindow::MainWindow() : QMainWindow()
 {
+    //CSS codes...
+    this->setStyleSheet("background-color: black;");
+    //
   // add drop down menus
   QMenu*  fileMenu = menuBar()->addMenu( "&File" );
   //QMenu*  editMenu = menuBar()->addMenu( "&Edit" );

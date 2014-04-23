@@ -19,6 +19,6 @@ void  Bullet::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
 {
     // paint station symbol, must be smaller than bounding rectangle
     painter->setRenderHint( QPainter::Antialiasing );
-    painter->setPen( QPen( Qt::cyan, 2 ) );
+    painter->setPen( QPen( Qt::white, 2 ) );
     painter->drawLine( 0,  0,  0,  -10 );
 }

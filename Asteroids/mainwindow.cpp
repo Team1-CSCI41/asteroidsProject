@@ -46,8 +46,9 @@
 MainWindow::MainWindow() : QMainWindow()
 {
     //CSS codes...
-    this->setStyleSheet("background-color: black;");
+    this->setStyleSheet("background-color:gray;");
     //
+
   // add drop down menus
   QMenu*  fileMenu = menuBar()->addMenu( "&File" );
   //QMenu*  editMenu = menuBar()->addMenu( "&Edit" );
@@ -113,7 +114,7 @@ MainWindow::MainWindow() : QMainWindow()
   connect( m_scene, SIGNAL(message(QString)), this, SLOT(showMessage(QString)) );
 
   // add status bar message
-  statusBar()->showMessage("QSimulate has started");
+  statusBar()->showMessage("You are now attempting in vain to evade several murderous asteroids. Survive if possible. ");
 
   //sets window size by default
   setFixedSize(WINDOW_WIDTH, WINDOW_HEIGHT);

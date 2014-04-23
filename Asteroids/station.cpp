@@ -69,14 +69,14 @@ void  Station::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     painter->setRenderHint( QPainter::Antialiasing );
   //---------------------------------------------------------------------------------------------------
   //Create Plane
-    painter->setPen( QPen( Qt::blue, 2 ) );
+    /*painter->setPen( QPen( Qt::red, 2 ) );
     painter->drawLine( shipCoord[0],  shipCoord[6],  shipCoord[1],  shipCoord[12]);
     painter->drawLine( shipCoord[1],  shipCoord[12],  shipCoord[0],  shipCoord[15]);
     painter->drawLine( shipCoord[0],  shipCoord[6],  shipCoord[2],  shipCoord[12]);
     painter->drawLine( shipCoord[2],  shipCoord[12],  shipCoord[0],  shipCoord[15]);
-
+*/
   //Right Half
-    painter->setPen( QPen( Qt::green, 2 ) );
+    painter->setPen( QPen( Qt::white, 2 ) );
     painter->drawLine( shipCoord[1],  shipCoord[2],  shipCoord[0],  shipCoord[2] );
     painter->drawLine( shipCoord[1],  shipCoord[2],  shipCoord[0],  shipCoord[0] );
     painter->drawLine( shipCoord[0],  shipCoord[0],  shipCoord[0],  shipCoord[2] );

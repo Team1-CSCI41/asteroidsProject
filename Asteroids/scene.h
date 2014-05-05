@@ -40,10 +40,10 @@ class Scene : public QGraphicsScene
 {
   Q_OBJECT
 public:
-  Scene( QUndoStack* );                       // constructor
+  Scene(  );                       // constructor
   void  writeStream( QXmlStreamWriter* );     // write scene data to xml stream
   void  readStream( QXmlStreamReader* );      // read scene data from xml stream
-  qreal stationMoveX, stationMoveY;           // global movement variables for ship
+  qreal stationMoveX, stationMoveY;           // movement variables for ship
 signals:
   void  message( QString );                   // info text message signal
 
@@ -58,6 +58,8 @@ protected:
   void  keyPressEvent(QKeyEvent *event);
   qreal sine[360], cosine[360];
   Station*  station;
+  Bullet*  bullet;
+  Asteroid*  asteroid;
 private:
   typedef QPair<Station*,QPointF>     StationPos;
   QList<StationPos>   m_stations;             // currently selected stations & start positions

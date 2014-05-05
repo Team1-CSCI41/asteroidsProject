@@ -33,6 +33,13 @@ class Station : public QGraphicsItem
 public:
   Station( qreal, qreal );                          // constructor
   Station();
+
+  void setXMove(qreal);
+  void setYMove(qreal);
+  qreal getXMove();
+  qreal getYMove();
+
+  void advance(int);
   void     paint( QPainter*,
                   const QStyleOptionGraphicsItem*,
                   QWidget* );                       // implement virtual paint function for Ship

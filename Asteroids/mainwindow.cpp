@@ -45,6 +45,11 @@
 
 MainWindow::MainWindow() : QMainWindow()
 {
+
+  //CSS codes...
+  this->setStyleSheet("background-color:gray;");
+  //
+
   // add drop down menus
   QMenu*  fileMenu = menuBar()->addMenu( "&File" );
   //QMenu*  editMenu = menuBar()->addMenu( "&Edit" );
@@ -100,7 +105,7 @@ MainWindow::MainWindow() : QMainWindow()
   //toolBar->addAction( redoAction );
 
   // create scene and central widget view of scene
-  m_scene               = new Scene( m_undoStack );
+  m_scene               = new Scene();
   QGraphicsView*   view = new QGraphicsView( m_scene );
   view->setAlignment( Qt::AlignLeft | Qt::AlignTop );
   view->setFrameStyle( 0 );
@@ -110,7 +115,7 @@ MainWindow::MainWindow() : QMainWindow()
   connect( m_scene, SIGNAL(message(QString)), this, SLOT(showMessage(QString)) );
 
   // add status bar message
-  statusBar()->showMessage("QSimulate has started");
+  statusBar()->showMessage("You are now being attacked by flying rocks. Don't die if you can help it.");
 
   //sets window size by default
   setFixedSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -189,7 +194,7 @@ bool  MainWindow::fileOpen()
 
   // open an xml stream reader and load simulation data
   QXmlStreamReader  stream( &file );
-  Scene*            newScene = new Scene( m_undoStack );
+  Scene*            newScene = new Scene();
   while ( !stream.atEnd() )
   {
     stream.readNext();

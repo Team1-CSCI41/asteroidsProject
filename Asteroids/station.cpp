@@ -23,6 +23,7 @@
 #include <QPainter>
 #include <QtCore/qmath.h>
 #include <iostream>
+#include "mainwindow.h"
 
 using namespace std;
 
@@ -53,8 +54,42 @@ Station::Station( qreal x, qreal y ) : QGraphicsItem()
             //QGraphicsItem::ItemIsMovable |
            // QGraphicsItem::ItemIsSelectable |
  // stationRotation= 90;
-
+    xMove=0;
+    yMove=-.001;
 }
+
+void Station::setXMove(qreal xM){
+    xMove=xM;
+}
+
+void Station::setYMove(qreal yM){
+    yMove=yM;
+}
+
+qreal Station::getXMove(){
+    return xMove;
+}
+
+qreal Station::getYMove(){
+    return yMove;
+}
+
+/************************************** advance ****************************************/
+
+void Station::advance(int){
+
+    qreal xDest = this->x() + xMove;
+    qreal yDest = this->y() + yMove;
+    cout << this->x() << " " << this->y() << " " << xMove << " " << yMove;
+
+    if(xDest < 0)             xDest += WINDOW_WIDTH - 1;
+    if(xDest > WINDOW_WIDTH)  xDest -= WINDOW_WIDTH;
+    if(yDest < 15)             yDest += (WINDOW_HEIGHT - 15);
+    if(yDest > WINDOW_HEIGHT) yDest -= (WINDOW_HEIGHT - 15);
+
+    this->setPos( xDest, yDest );
+}
+
 
 /************************************** paintShip ****************************************/
 
@@ -64,7 +99,7 @@ void  Station::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
   //---------------------------------------------------------------------------------------------------
   //Create Plane
 
-    painter->setPen( QPen( Qt::green, 2 ) );
+    painter->setPen( QPen( Qt::white, 2 ) );
     painter->drawLine( +10*qCos((stationRotation-90)*PI/180),+10*qSin((stationRotation-90)*PI/180),  5*qCos((stationRotation+180)*PI/180),5*qSin((stationRotation+180)*PI/180) );
     painter->drawLine(  +5*qCos((stationRotation+180)*PI/180),5*qSin((stationRotation+180)*PI/180),  +10*qCos((stationRotation+90)*PI/180),+10*qSin((stationRotation+90)*PI/180));
     painter->drawLine( +10*qCos((stationRotation+90)*PI/180),+10*qSin((stationRotation+90)*PI/180),  +20*qCos((stationRotation+180)*PI/180),+20*qSin((stationRotation+180)*PI/180) );

@@ -19,7 +19,7 @@ void  Asteroid::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 {
     // paint Asteroid symbol, must be smaller than bounding rectangle
     painter->setRenderHint( QPainter::Antialiasing );
-    painter->setPen( QPen( Qt::black, 2 ) );
+    painter->setPen( QPen( Qt::white, 2 ) );
 
     //painter->drawEllipse(0,0,20,20);
     painter->drawRect( -8,  -8,  12,   12 );

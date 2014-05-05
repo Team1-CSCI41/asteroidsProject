@@ -56,7 +56,7 @@ Bullet *bullet;
 Asteroid *asteroid, newAsteroid;
 
 QList <Asteroid*> *asteroidList = new QList<Asteroid*>;
-QList <Bullet*> *bulletList = new QList<Bullet*>;
+//QList <Bullet*> *bulletList = new QList<Bullet*>;
 
 qreal           stationX = 0.5*WINDOW_WIDTH;
 qreal           stationY = 0.45*WINDOW_HEIGHT;
@@ -90,16 +90,7 @@ Scene::Scene() : QGraphicsScene()
     // create invisible item to provide default top-left anchor to scene
     addLine( 0, 0, 0, 1, QPen(Qt::transparent, 1) );
 
-    //Intialize Sine and Cosine
-    for (int k=0; k<=359; k=k+1)
-    {
-       // These two lines throw a casting error.
 
-      sine[k]=qSin(k*PI/180);
-      cosine[k]=qCos(k*PI/180);
-
-
-    }
 
 /*
   // connect selectionChanged signal to selectStations slot
@@ -127,12 +118,12 @@ Scene::Scene() : QGraphicsScene()
   this->addItem(asteroid);
   asteroid->setXMove(.001);
   asteroid->setYMove(.001);
-
+/*
   bullet= new Bullet(bulletX, bulletY);
   this->addItem(bullet);
   bullet->setXMove(.001);
   bullet->setYMove(.001);
-
+*/
   /*
   Asteroid*  asteroid = dynamic_cast<Asteroid*>( itemAt( asteroidX, asteroidY) );
   Bullet*  bullet = dynamic_cast<Bullet*>( itemAt( bulletX, bulletY ) );
@@ -189,7 +180,7 @@ int   stationRotation = 90;
   //Update position to new position
   asteroidX = xDest;
   asteroidY = yDest;
-
+/*
   //***BULLET:
 
   //Calculate new location
@@ -328,6 +319,8 @@ void  Scene::writeStream( QXmlStreamWriter* stream )
 
 void  Scene::readStream( QXmlStreamReader* stream )
 {
+    QList <Asteroid*> *asteroidList = new QList<Asteroid*>;
+    QList <Bullet*> *bulletList = new QList<Bullet*>;
   // read station data from xml stream
   while ( !stream->atEnd() )
   {
@@ -345,14 +338,18 @@ void  Scene::readStream( QXmlStreamReader* stream )
   }
 }
 
-void Scene:: createAsteroid()
+//--------------------------------------------------------------------------------
+
+/*void Scene:: createAsteroid()
 {
     QTime now= QTime::currentTime();
     qsrand(now.msec());
 
     //empty list
     asteroidList->clear();
-}
+}*/
+
+//--------------------------------------------------------------------------------
 
 void Scene:: keyPressEvent(QKeyEvent *event)
 {

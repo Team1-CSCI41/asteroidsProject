@@ -1,5 +1,9 @@
 #include "bullet.h"
 
+#include "scene.h"
+
+#include "mainwindow.h"
+
 #include <QPainter>
 
 Bullet::Bullet()
@@ -13,8 +17,8 @@ Bullet::Bullet( qreal x, qreal y, qreal xm, qreal ym ) : QGraphicsItem()
   setFlags( QGraphicsItem::ItemIgnoresTransformations );
             //QGraphicsItem::ItemIsMovable |
            // QGraphicsItem::ItemIsSelectable |
-  xmove=xm;
-  ymove=ym;
+  xMove=xm;
+  yMove=ym;
 }
 
 void  Bullet::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

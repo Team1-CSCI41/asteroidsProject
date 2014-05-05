@@ -32,6 +32,7 @@ class Station : public QGraphicsItem
 {
 public:
   Station( qreal, qreal );                          // constructor
+  Station( qreal, qreal, qreal, qreal );
   Station();
 
   void setXMove(qreal);
@@ -40,6 +41,7 @@ public:
   qreal getYMove();
 
   void advance(int);
+
   void     paint( QPainter*,
                   const QStyleOptionGraphicsItem*,
                   QWidget* );                       // implement virtual paint function for Ship
@@ -49,16 +51,14 @@ public:
 
 
  //int   stationRotation;
+
+
+
 private:
   qreal xPos;
   qreal yPos;
   qreal xMove;
   qreal yMove;
-
-///////////////////////////////////
-
-
-
 };
 
 #endif  // STATION_H

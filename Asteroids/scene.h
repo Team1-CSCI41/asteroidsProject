@@ -27,6 +27,8 @@ class QUndoStack;
 class QXmlStreamWriter;
 class QXmlStreamReader;
 class Station;
+class Bullet;
+class Asteroid;
 
 #include <QGraphicsScene>
 
@@ -44,25 +46,33 @@ public:
   void  writeStream( QXmlStreamWriter* );     // write scene data to xml stream
   void  readStream( QXmlStreamReader* );      // read scene data from xml stream
   qreal stationMoveX, stationMoveY;           // movement variables for ship
+  // A function that generates the asteroids/creates asteroid list
+  void generateAsteroids();
+
 signals:
   void  message( QString );                   // info text message signal
 
 public slots:
   void  selectStations();                     // records selected stations & positions
   void  manageObjects();                      // moves objects by updating their positions
+ // void collisionDetection(); // COLLISION DETECTION. DUH!
 
 protected:
   void  mousePressEvent( QGraphicsSceneMouseEvent* );        // receive mouse press events
   void  mouseReleaseEvent( QGraphicsSceneMouseEvent* );      // receive mouse release events
   void  contextMenuEvent( QGraphicsSceneContextMenuEvent* ); // receive context menu events
+
   void  keyPressEvent(QKeyEvent *event);
-  qreal sine[360], cosine[360];
+
   Station*  station;
   Bullet*  bullet;
   Asteroid*  asteroid;
+
+
 private:
   typedef QPair<Station*,QPointF>     StationPos;
   QList<StationPos>   m_stations;             // currently selected stations & start positions
+  // Random comment.
   QUndoStack*         m_undoStack;            // undo stack for undo & redo of commands
 };
 

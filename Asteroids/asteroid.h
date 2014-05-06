@@ -15,7 +15,7 @@ public:
   QRectF   boundingRect() const
     { return QRectF(-9,  -9,  13,   13); }           // implement virtual boundingRect
   qreal getXPos(), getYPos(), getXMove(),getYMove(), getSize();
-  void setXPos(qreal), setYPos(qreal),  setSize(qreal), advance(int), setXMove(qreal), setYMove(qreal) ;
+  void setXPos(qreal), setYPos(qreal),  setSize(qreal), advance(int), setXMove(double), setYMove(double) ;
 private:
   qreal xPos, yPos, xMove, yMove, size;
 };

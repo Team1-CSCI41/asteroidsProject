@@ -56,7 +56,9 @@ Bullet *bullet;
 Asteroid *asteroid, newAsteroid;
 
 QList <Asteroid*> *asteroidList = new QList<Asteroid*>;
-//QList <Bullet*> *bulletList = new QList<Bullet*>;
+QList <Bullet*> *bulletList = new QList<Bullet*>;
+
+
 
 qreal           stationX = 0.5*WINDOW_WIDTH;
 qreal           stationY = 0.45*WINDOW_HEIGHT;
@@ -68,6 +70,7 @@ qreal           stationMoveX = 0;
 qreal           stationMoveY = 0;
 qreal           bulletMoveX = 4;
 qreal           bulletMoveY = 6;
+qreal           startSize = 2.2;
 
 /*************************************************************************************/
 /******************** Scene representing the simulated landscape *********************/
@@ -92,32 +95,35 @@ Scene::Scene() : QGraphicsScene()
 
 
 
-/*
+
   // connect selectionChanged signal to selectStations slot
   connect( this, SIGNAL(selectionChanged()), this, SLOT(selectStations()) );
 
   // set local variables and check if existing station clicked
-  qreal           stationX = .5*WINDOW_WIDTH;
-  qreal           stationY = .45*WINDOW_HEIGHT;
-  qreal           asteroidX = 0.75*WINDOW_WIDTH;
-  qreal           asteroidY = 0.75*WINDOW_HEIGHT;
-  qreal           bulletX = 0.25*WINDOW_WIDTH;
-  qreal           bulletY = 0.25*WINDOW_HEIGHT;
-  qreal           asteroidMoveX = -1;
-  qreal           asteroidMoveY = -1;
-  qreal           xDest, yDest;
+        stationX = .5*WINDOW_WIDTH;
+        stationY = .45*WINDOW_HEIGHT;
+        asteroidX = 0.75*WINDOW_WIDTH;
+        asteroidY = 0.75*WINDOW_HEIGHT;
+        bulletX = 0.25*WINDOW_WIDTH;
+        bulletY = 0.25*WINDOW_HEIGHT;
+        asteroidMoveX = -1;
+        asteroidMoveY = -1;
+        xDest, yDest;
 
   station = dynamic_cast<Station*>( itemAt( stationX, stationY ) );
-  */
+
   station = new Station(stationX,stationY );
   this->addItem(station);
   station->setXMove(.001);
   station->setYMove(.001);
-
+/*
   asteroid= new Asteroid(asteroidX, asteroidY);
   this->addItem(asteroid);
   asteroid->setXMove(.001);
   asteroid->setYMove(.001);
+*/
+
+  generateAsteroids();
 /*
   bullet= new Bullet(bulletX, bulletY);
   this->addItem(bullet);
@@ -146,6 +152,39 @@ Scene::Scene() : QGraphicsScene()
 
 
 
+void Scene::generateAsteroids()
+{
+    //Seed random number generator
+    QTime now = QTime::currentTime();
+    qsrand(now.msec());
+    //Empty the list
+    asteroidList->clear();
+    //Spawn asteroids
+    for(int i = 0; i <= MAX_NUM_OF_ASTEROIDS - 1; i++)
+    {
+        //Randomly place asteroid and set initial velocity
+        do
+        {
+            asteroidX = qrand() % WINDOW_WIDTH-500;
+            asteroidY = qrand() % WINDOW_HEIGHT-500;
+        }//end do
+        //Asteroids must spawn 100+ pixels from ship
+        while (pow(asteroidX - station->x(), 2) + pow(asteroidY - station->y(), 2) < pow(100, 2));
+        asteroidMoveX = qrand() % 6 - 2.5;
+        asteroidMoveY = qrand() % 6 - 2.5;
+        //Instantiate asteroid, add to list, and draw it
+        Asteroid *asteroid = new Asteroid(asteroidX, asteroidY, asteroidMoveX, asteroidMoveY, startSize);
+        asteroidList->append(asteroid);
+        this->addItem(asteroid);
+    }//end for
+}
+
+
+
+
+
+
+
 /********************************** manageObjects ***********************************/
 
 void  Scene::manageObjects()
@@ -170,13 +209,13 @@ void  Scene::manageObjects()
   if(yDest > WINDOW_HEIGHT) yDest -= WINDOW_HEIGHT;
 
   //Delete asteroid from old position
-  Asteroid* asteroid = dynamic_cast<Asteroid*>(itemAt(asteroidX, asteroidY));
-  m_undoStack->push(new CommandAsteroidDelete(this, asteroid));
+ // Asteroid* asteroid = dynamic_cast<Asteroid*>(itemAt(asteroidX, asteroidY));
+ // m_undoStack->push(new CommandAsteroidDelete(this, asteroid));
 
   //Draw asteroid at new position
-  dynamic_cast<Asteroid*>(itemAt(xDest, yDest));
-  m_undoStack->push(new CommandAsteroidAdd(this, xDest, yDest));
-int   stationRotation = 90;
+ // dynamic_cast<Asteroid*>(itemAt(xDest, yDest));
+ // m_undoStack->push(new CommandAsteroidAdd(this, xDest, yDest));
+//int   stationRotation = 90;
   //Update position to new position
   asteroidX = xDest;
   asteroidY = yDest;
@@ -401,7 +440,7 @@ void Scene:: keyPressEvent(QKeyEvent *event)
         case Qt::Key_Space:
         {
 
-
+            /*
                 //Calculate bullet location, in front of ship's "nose"
                 bulletX = stationX + ( 22 * qCos(stationRotation * PI / 180) + 2.25);
                 bulletY = stationY +  (-22 * qSin(stationRotation * PI / 180) - 2.5);
@@ -413,6 +452,26 @@ void Scene:: keyPressEvent(QKeyEvent *event)
                 m_undoStack->push(new CommandBulletAdd
                     (this, bulletX, bulletY, bulletMoveX, bulletMoveY));
                 break;
+            */
+
+            //Only fires bullets if ship is alive and max bullets are not already being used
+            if(station->alive and (bulletList->size() <= MAX_NUM_OF_BULLETS - 1))
+            {
+                //Calculate bullet location, in front of ship's "nose"
+                bulletX = station->x() + ( 13 * qCos(stationRotation * PI / 180) + 2.25);
+                bulletY = station->y() +  (-13 * qSin(stationRotation * PI / 180) - 2.5);
+
+                //Calculate bullet's velocity based on
+                bulletMoveX = station->getXMove() + 5 * qCos(stationRotation * PI / 180);
+                bulletMoveY = station->getYMove() -5 * qSin(stationRotation * PI / 180);
+
+                //Instantiate bullet, add to list, and draw it
+                Bullet *bullet = new Bullet( bulletX,  bulletY, bulletMoveX, bulletMoveY);
+                bulletList->append(bullet);
+                this->addItem(bullet); //Add to scene so it can be drawn
+
+            }
+            break;
 
         }
     }

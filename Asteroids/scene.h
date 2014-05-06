@@ -49,13 +49,26 @@ public:
   // A function that generates the asteroids/creates asteroid list
   void generateAsteroids();
 
+  qreal           stationX;
+  qreal           stationY;
+  qreal           asteroidX;
+  qreal           asteroidY;
+  qreal           bulletX;
+  qreal           bulletY;
+  qreal           asteroidMoveX;
+  qreal           asteroidMoveY ;
+  qreal           xDest, yDest;
+  int MAX_NUM_OF_ASTEROIDS = 2;
+  int MAX_NUM_OF_BULLETS = 5;
+
+
 signals:
   void  message( QString );                   // info text message signal
 
 public slots:
   void  selectStations();                     // records selected stations & positions
   void  manageObjects();                      // moves objects by updating their positions
- // void collisionDetection(); // COLLISION DETECTION. DUH!
+  void collisionDetection(); // COLLISION DETECTION. DUH!
 
 protected:
   void  mousePressEvent( QGraphicsSceneMouseEvent* );        // receive mouse press events
@@ -67,6 +80,8 @@ protected:
   Station*  station;
   Bullet*  bullet;
   Asteroid*  asteroid;
+
+
 
 
 private:

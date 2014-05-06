@@ -52,7 +52,7 @@ public:
 
  //int   stationRotation;
 
-
+  bool alive;
 
 private:
   qreal xPos;

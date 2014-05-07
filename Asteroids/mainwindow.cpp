@@ -52,6 +52,7 @@ MainWindow::MainWindow() : QMainWindow()
 
   // add drop down menus
   QMenu*  fileMenu = menuBar()->addMenu( "&File" );
+  menuBar()->setStyleSheet("background-color:white");
   //QMenu*  editMenu = menuBar()->addMenu( "&Edit" );
   //QMenu*  viewMenu = menuBar()->addMenu( "&View" );
   //menuBar()->addMenu( "&Simulate" );

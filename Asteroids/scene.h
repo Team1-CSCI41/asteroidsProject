@@ -48,18 +48,20 @@ public:
   qreal stationMoveX, stationMoveY;           // movement variables for ship
   // A function that generates the asteroids/creates asteroid list
   void generateAsteroids();
-
+  void generateBullets();
+/*
   qreal           stationX;
   qreal           stationY;
   qreal           asteroidX;
   qreal           asteroidY;
   qreal           bulletX;
   qreal           bulletY;
+  qreal           bulletMoveX;
+  qreal           bulletMoveY;
   qreal           asteroidMoveX;
   qreal           asteroidMoveY ;
   qreal           xDest, yDest;
-  int MAX_NUM_OF_ASTEROIDS = 2;
-  int MAX_NUM_OF_BULLETS = 5;
+*/
 
 
 signals:

@@ -58,6 +58,9 @@ Asteroid *asteroid, newAsteroid;
 QList <Asteroid*> *asteroidList = new QList<Asteroid*>;
 QList <Bullet*> *bulletList = new QList<Bullet*>;
 
+int MAX_NUM_OF_ASTEROIDS = 4;
+int MAX_NUM_OF_BULLETS = 5;
+
 
 
 qreal           stationX = 0.5*WINDOW_WIDTH;
@@ -66,11 +69,14 @@ qreal           asteroidX = 0.75*WINDOW_WIDTH;
 qreal           asteroidY = 0.75*WINDOW_HEIGHT;
 qreal           bulletX = 0.25*WINDOW_WIDTH;
 qreal           bulletY = 0.25*WINDOW_HEIGHT;
-qreal           stationMoveX = 0;
-qreal           stationMoveY = 0;
-qreal           bulletMoveX = 4;
-qreal           bulletMoveY = 6;
+qreal           stationMoveX;
+qreal           stationMoveY;
+qreal           bulletMoveX;
+qreal           bulletMoveY;
+qreal           asteroidMoveX;
+qreal           asteroidMoveY;
 qreal           startSize = 2.2;
+int             i,j,k,z;
 
 /*************************************************************************************/
 /******************** Scene representing the simulated landscape *********************/
@@ -86,7 +92,7 @@ Scene::Scene() : QGraphicsScene()
 
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(advance()));
-    connect(timer, SIGNAL(timeout()), this, SLOT(manageObjects()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(collisionDetection()));
     timer->start(1000/25); // fire the timer 25 times per second
 
     //Initialize the Scene
@@ -100,7 +106,7 @@ Scene::Scene() : QGraphicsScene()
 
   // connect selectionChanged signal to selectStations slot
   connect( this, SIGNAL(selectionChanged()), this, SLOT(selectStations()) );
-
+/*
   // set local variables and check if existing station clicked
         stationX = .5*WINDOW_WIDTH;
         stationY = .45*WINDOW_HEIGHT;
@@ -108,10 +114,8 @@ Scene::Scene() : QGraphicsScene()
         asteroidY = 0.75*WINDOW_HEIGHT;
         bulletX = 0.25*WINDOW_WIDTH;
         bulletY = 0.25*WINDOW_HEIGHT;
-        asteroidMoveX = -1;
-        asteroidMoveY = -1;
         xDest, yDest;
-
+*/
   station = dynamic_cast<Station*>( itemAt( stationX, stationY ) );
 
   station = new Station(stationX,stationY );
@@ -126,6 +130,9 @@ Scene::Scene() : QGraphicsScene()
 */
 
   generateAsteroids();
+
+
+
 /*
   bullet= new Bullet(bulletX, bulletY);
   this->addItem(bullet);
@@ -167,15 +174,19 @@ void Scene::generateAsteroids()
         //Randomly place asteroid and set initial velocity
         do
         {
-            asteroidX = qrand() % WINDOW_WIDTH-500;
-            asteroidY = qrand() % WINDOW_HEIGHT-500;
+            asteroidX =qrand() % WINDOW_WIDTH-500;
+            asteroidY =qrand() % WINDOW_HEIGHT-500;
+            cout<<"asteroidX "<<asteroidX<<" asteroidY "<<asteroidY<<endl;
+
+
         }//end do
         while (pow(asteroidX - station->x(), 2) + pow(asteroidY - station->y(), 2) < pow(10, 2));
 
 
 
-        asteroidMoveX = qrand() % 6 - 52.5;
-        asteroidMoveY = qrand() % 6 - 52.5;
+        asteroidMoveX = qrand() % 6 - 2.5;
+        asteroidMoveY = qrand() % 6 - 2.5;
+        cout<<"asteroidMoveX "<<asteroidMoveX<<" asteroidMoveY "<<asteroidMoveY<<endl;
         //Instantiate asteroid, add to list, and draw it
         Asteroid *asteroid = new Asteroid(asteroidX, asteroidY, asteroidMoveX, asteroidMoveY, startSize);
 
@@ -184,8 +195,117 @@ void Scene::generateAsteroids()
     }//end for
 }
 
+void Scene::generateBullets()
+{
+    if(station->alive and (bulletList->size() <= MAX_NUM_OF_BULLETS - 1))
+    {
+        //Calculate bullet location, in front of ship's "nose"
+        bulletX = station->x() + (-22 * qCos(stationRotation * PI / 180));
+        bulletY = station->y() +  (-22 * qSin(stationRotation * PI / 180));
 
-void Scene::collisionDetection(){
+        //Calculate bullet's velocity based on
+        bulletMoveX = station->getXMove() + -5 * qCos(stationRotation * PI / 180);
+        bulletMoveY = station->getYMove() + -5 * qSin(stationRotation * PI / 180);
+
+        //Instantiate bullet, add to list, and draw it
+        Bullet *bullet = new Bullet( bulletX,  bulletY, bulletMoveX, bulletMoveY);
+        bulletList->append(bullet);
+        this->addItem(bullet); //Add to scene so it can be drawn
+
+    }
+
+
+}
+
+void Scene::collisionDetection()
+{
+    Bullet *bullet;
+    Asteroid *asteroid, newAsteroid;
+    qreal aLeft, aRight, aTop, aBottom, bX, bY, xOffset=0, yOffset=-3;
+    qreal newStationXMove, newStationYMove, newAsteroidXMove, newAsteroidYMove;
+    bool removeBullet, removeStation, isCenterClear;
+
+    //Check if Bullet list is Full
+    if( not bulletList->isEmpty())
+    {
+        //Bullet's Data
+        for(k=0; k<=bulletList->size()-1; k=k+1)
+        {
+            bullet=bulletList->at(i);
+            bX=bullet->x()+xOffset;
+            bY=bullet->y()+yOffset;
+            removeBullet= false;
+
+            //check if Bullet is still alive
+            if(bullet->getLifespan()<=0)
+            {
+                removeBullet=true;
+            }
+            //Asteroids Data
+            for (j=0; j<=asteroidList->size()-1; j=j+1)
+            {
+                asteroid=asteroidList->at(j);
+                aLeft=asteroid->x()-8*asteroid->getSize();
+                aRight=asteroid->x()+8*asteroid->getSize();
+                aTop=asteroid->y()-16*asteroid->getSize();
+                aBottom=asteroid->y()+16*asteroid->getSize();
+
+                //Bullet hits the Asteroid
+                if( bX >= aLeft and bX <= aRight and bY >= aTop and bY<=aBottom)
+                {
+                    removeBullet = true;
+
+
+                    if (asteroid->getSize()<=.49*startSize)
+                    {
+                        asteroidList->removeAt(j);
+                        delete asteroid;
+                        asteroid=NULL;
+                    }
+
+                    else
+                    {
+
+                        asteroidX=asteroid->x();
+                        asteroidY=asteroid->y();
+
+                            //Splitting Asteroid
+                            for (z=0; z<=1; z=z+1)
+                            {
+                               //Location of New Ateroids with respect to Old Asteroid
+
+                                asteroidMoveX=(.85+.3*z)*asteroid->getXMove();
+                                asteroidMoveY=(1.15-.3*z)*asteroid->getYMove();
+
+                                Asteroid *newAsteroid= new Asteroid (asteroidX, asteroidY, asteroidMoveX, asteroidMoveY, .7*asteroid->getSize());
+                                asteroidList->append(newAsteroid);
+                                this->addItem(newAsteroid);
+
+                            }
+
+                        this->removeItem(asteroid);
+                        asteroidList->removeAt(j);
+                        delete asteroid;
+                        asteroid=NULL;
+                    }
+
+
+                }
+
+
+            }
+
+            if(removeBullet)
+            {
+                this->removeItem(bullet);
+                bulletList->removeAt(i);
+                delete bullet;
+                bullet=NULL;
+            }
+        }
+    }
+
+
 }
 
 
@@ -196,8 +316,7 @@ void Scene::collisionDetection(){
 
 void  Scene::manageObjects()
 {
-  qreal asteroidMoveX = 2;
-  qreal asteroidMoveY = 3;
+
 
   qreal xDest=0;
   qreal yDest=0;
@@ -295,6 +414,8 @@ void  Scene::mousePressEvent( QGraphicsSceneMouseEvent* event )
 
   // call base mousePressEvent to handle other mouse press events such as selecting
   QGraphicsScene::mousePressEvent( event );*/
+
+    generateBullets();
 }
 
 /********************************* contextMenuEvent **********************************/
@@ -348,7 +469,7 @@ void  Scene::mouseReleaseEvent( QGraphicsSceneMouseEvent* event )
 
 void  Scene::writeStream( QXmlStreamWriter* stream )
 {
-  // write station data to xml stream
+  // write station data to xml streamgenerateBullets();
   foreach( QGraphicsItem*  item, items() )
   {
     Station*  station = dynamic_cast<Station*>( item );
@@ -390,7 +511,7 @@ void  Scene::readStream( QXmlStreamReader* stream )
 {
     QTime now= QTime::currentTime();
     qsrand(now.msec());
-
+teroidList->at(j);
     //empty list
     asteroidList->clear();
 }*/
@@ -417,7 +538,7 @@ void Scene:: keyPressEvent(QKeyEvent *event)
                 //cout << stationRotation << endl;//for debugging
                 if(stationRotation < 0) stationRotation += 360; //Defensive
                 break;
-        }
+        }generateBullets();
 
         case Qt::Key_Up:
         //case Qt::Key_w:
@@ -427,7 +548,7 @@ void Scene:: keyPressEvent(QKeyEvent *event)
                 stationMoveY = station->getYMove() + accel*qSin((stationRotation + 180) * PI / 180);
                 station->setXMove(stationMoveX);
                 station->setYMove(stationMoveY);
-                cout<<"ashdajk";
+
 
             break;
         }
@@ -447,37 +568,7 @@ void Scene:: keyPressEvent(QKeyEvent *event)
         case Qt::Key_Space:
         {
 
-            /*
-                //Calculate bullet location, in front of ship's "nose"
-                bulletX = stationX + ( 22 * qCos(stationRotation * PI / 180) + 2.25);
-                bulletY = stationY +  (-22 * qSin(stationRotation * PI / 180) - 2.5);
-                //Calculate bullet's velocity based on
-                bulletMoveX = stationMoveX + 5 * qCos(stationRotation * PI / 180);
-                bulletMoveY = stationMoveY -5 * qSin(stationRotation * PI / 180);
-                //Instantiate bullet, add to list, and draw it
-                Bullet *bullet = new Bullet(bulletX, bulletY, bulletMoveX, bulletMoveY);
-                m_undoStack->push(new CommandBulletAdd
-                    (this, bulletX, bulletY, bulletMoveX, bulletMoveY));
-                break;
-            */
-
-            //Only fires bullets if ship is alive and max bullets are not already being used
-            if(station->alive and (bulletList->size() <= MAX_NUM_OF_BULLETS - 1))
-            {
-                //Calculate bullet location, in front of ship's "nose"
-                bulletX = station->x() + ( 13 * qCos(stationRotation * PI / 180) + 2.25);
-                bulletY = station->y() +  (-13 * qSin(stationRotation * PI / 180) - 2.5);
-
-                //Calculate bullet's velocity based on
-                bulletMoveX = station->getXMove() + 5 * qCos(stationRotation * PI / 180);
-                bulletMoveY = station->getYMove() -5 * qSin(stationRotation * PI / 180);
-
-                //Instantiate bullet, add to list, and draw it
-                Bullet *bullet = new Bullet( bulletX,  bulletY, bulletMoveX, bulletMoveY);
-                bulletList->append(bullet);
-                this->addItem(bullet); //Add to scene so it can be drawn
-
-            }
+            generateBullets();
             break;
 
         }

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'scene.h'
 **
-** Created: Mon May 5 15:54:38 2014
+** Created: Wed May 7 14:29:46 2014
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_Scene[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       3,   14, // methods
+       4,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -36,13 +36,14 @@ static const uint qt_meta_data_Scene[] = {
  // slots: signature, parameters, type, tag, flags
       24,    6,    6,    6, 0x0a,
       41,    6,    6,    6, 0x0a,
+      57,    6,    6,    6, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_Scene[] = {
     "Scene\0\0message(QString)\0selectStations()\0"
-    "manageObjects()\0"
+    "manageObjects()\0collisionDetection()\0"
 };
 
 void Scene::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -54,6 +55,7 @@ void Scene::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void 
         case 0: _t->message((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 1: _t->selectStations(); break;
         case 2: _t->manageObjects(); break;
+        case 3: _t->collisionDetection(); break;
         default: ;
         }
     }
@@ -91,9 +93,9 @@ int Scene::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 3)
+        if (_id < 4)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 3;
+        _id -= 4;
     }
     return _id;
 }

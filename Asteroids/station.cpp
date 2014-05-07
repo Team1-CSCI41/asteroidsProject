@@ -43,6 +43,7 @@ using namespace std;
 /************************************ constuctor *************************************/
 Station::Station()
 {
+
  //    stationRotation= 90;
 }
 
@@ -56,6 +57,7 @@ Station::Station( qreal x, qreal y ) : QGraphicsItem()
  // stationRotation= 90;
     xMove=0;
     yMove=-.001;
+    this->alive=true;
 }
 
 void Station::setXMove(qreal xM){
@@ -80,12 +82,11 @@ void Station::advance(int){
 
     qreal xDest = this->x() + xMove;
     qreal yDest = this->y() + yMove;
-    cout << this->x() << " " << this->y() << " " << xMove << " " << yMove;
 
     if(xDest < 0)             xDest += WINDOW_WIDTH - 1;
     if(xDest > WINDOW_WIDTH)  xDest -= WINDOW_WIDTH;
-    if(yDest < 15)             yDest += (WINDOW_HEIGHT - 15);
-    if(yDest > WINDOW_HEIGHT) yDest -= (WINDOW_HEIGHT - 15);
+    if(yDest < 15)             yDest += (WINDOW_HEIGHT - 50);
+    if(yDest > WINDOW_HEIGHT-20) yDest -= (WINDOW_HEIGHT - 50);
 
     this->setPos( xDest, yDest );
 }
@@ -104,7 +105,7 @@ void  Station::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     painter->drawLine(  +5*qCos((stationRotation+180)*PI/180),5*qSin((stationRotation+180)*PI/180),  +10*qCos((stationRotation+90)*PI/180),+10*qSin((stationRotation+90)*PI/180));
     painter->drawLine( +10*qCos((stationRotation+90)*PI/180),+10*qSin((stationRotation+90)*PI/180),  +20*qCos((stationRotation+180)*PI/180),+20*qSin((stationRotation+180)*PI/180) );
     painter->drawLine( +20*qCos((stationRotation+180)*PI/180),+20*qSin((stationRotation+180)*PI/180),  +10*qCos((stationRotation-90)*PI/180),  +10*qSin((stationRotation-90)*PI/180) );
-    cout<<stationRotation<<endl;
+
 
 
 }

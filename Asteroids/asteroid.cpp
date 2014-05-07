@@ -16,14 +16,14 @@ Asteroid::Asteroid( qreal x, qreal y ) : QGraphicsItem()
            // QGraphicsItem::ItemIsSelectable |
 }
 
-Asteroid::Asteroid( qreal x, qreal y, qreal ym, qreal xm, qreal s ) : QGraphicsItem()
+Asteroid::Asteroid( qreal x, qreal y, qreal xm, qreal ym, qreal s ) : QGraphicsItem()
 {
   // set Asteroid pixmap and position
   setPos( x, y );
   setFlags( QGraphicsItem::ItemIgnoresTransformations );
 
 
-  xPos = x; yPos = y; xMove = xm; yMove = y; size = s;
+  xPos = x; yPos = y; xMove = xm; yMove = ym; size = s;
 }
 
 Asteroid::Asteroid()
@@ -85,8 +85,8 @@ void  Asteroid::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     painter->setRenderHint( QPainter::Antialiasing );
     painter->setPen( QPen( Qt::white, 2 ) );
 
-    //painter->drawEllipse(0,0,20,20);
-    painter->drawRect( -8,  -8,  12,   12 );
+
+    painter->drawRect( -8*size,  -8*size,  16*size,   16*size );
 
 }
 
@@ -95,12 +95,12 @@ void Asteroid::advance(int){
     qreal xDest = this->scenePos().x() + xMove;
     qreal yDest = this->scenePos().y() + yMove;
 
-    cout << this->x() << " " << this->y() << " " << xMove << " " << yMove;
+
 
     if(xDest < 0)             xDest += WINDOW_WIDTH - 1;
     if(xDest > WINDOW_WIDTH)  xDest -= WINDOW_WIDTH;
-    if(yDest < 15)             yDest += (WINDOW_HEIGHT - 15);
-    if(yDest > WINDOW_HEIGHT) yDest -= (WINDOW_HEIGHT - 15);
+    if(yDest < 15)             yDest += (WINDOW_HEIGHT - 50);
+    if(yDest > WINDOW_HEIGHT-20) yDest -= (WINDOW_HEIGHT - 50);
 
     this->setPos( xDest, yDest );
 

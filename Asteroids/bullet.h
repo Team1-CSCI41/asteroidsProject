@@ -12,8 +12,9 @@ public:
                   const QStyleOptionGraphicsItem*,
                   QWidget* );                       // implement virtual paint function for Ship
   QRectF   boundingRect() const
-    { return QRectF(-1, -12, 3, 13); }           // implement virtual boundingRect
-  qreal getXPos(), getYPos(), getXMove(), getYMove(), getLifespan();
+    { return QRectF(-4, -4, 8, 8); }           // implement virtual boundingRect
+  qreal getXPos(), getYPos(), getXMove(), getYMove();
+  int getLifespan();
   void setXPos(qreal), setYPos(qreal), advance(int);
 private:
   qreal xPos, yPos, xMove, yMove, lifespan;

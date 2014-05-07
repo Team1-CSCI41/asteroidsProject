@@ -76,6 +76,11 @@ qreal Station::getYMove(){
     return yMove;
 }
 
+bool Station::getalive()
+{
+    return alive;
+}
+
 /************************************** advance ****************************************/
 
 void Station::advance(int){

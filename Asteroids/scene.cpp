@@ -61,6 +61,8 @@ QList <Bullet*> *bulletList = new QList<Bullet*>;
 int MAX_NUM_OF_ASTEROIDS = 4;
 int MAX_NUM_OF_BULLETS = 5;
 
+bool alive;
+
 
 
 qreal           stationX = 0.5*WINDOW_WIDTH;
@@ -76,7 +78,7 @@ qreal           bulletMoveY;
 qreal           asteroidMoveX;
 qreal           asteroidMoveY;
 qreal           startSize = 2.2;
-int             i,j,k,z;
+int             i, j, k, y, z, newLifeDelay=0;
 
 /*************************************************************************************/
 /******************** Scene representing the simulated landscape *********************/
@@ -101,6 +103,7 @@ Scene::Scene() : QGraphicsScene()
     // create invisible item to provide default top-left anchor to scene
     addLine( 0, 0, 0, 1, QPen(Qt::transparent, 1) );
 
+    alive=true;
 
 
 
@@ -176,7 +179,7 @@ void Scene::generateAsteroids()
         {
             asteroidX =qrand() % WINDOW_WIDTH-500;
             asteroidY =qrand() % WINDOW_HEIGHT-500;
-            cout<<"asteroidX "<<asteroidX<<" asteroidY "<<asteroidY<<endl;
+
 
 
         }//end do
@@ -186,7 +189,7 @@ void Scene::generateAsteroids()
 
         asteroidMoveX = qrand() % 6 - 2.5;
         asteroidMoveY = qrand() % 6 - 2.5;
-        cout<<"asteroidMoveX "<<asteroidMoveX<<" asteroidMoveY "<<asteroidMoveY<<endl;
+
         //Instantiate asteroid, add to list, and draw it
         Asteroid *asteroid = new Asteroid(asteroidX, asteroidY, asteroidMoveX, asteroidMoveY, startSize);
 
@@ -261,7 +264,7 @@ void Scene::collisionDetection()
                         asteroidList->removeAt(j);
                         delete asteroid;
                         asteroid=NULL;
-                    }
+                    }//end if
 
                     else
                     {
@@ -281,19 +284,19 @@ void Scene::collisionDetection()
                                 asteroidList->append(newAsteroid);
                                 this->addItem(newAsteroid);
 
-                            }
+                            }//end for z
 
                         this->removeItem(asteroid);
                         asteroidList->removeAt(j);
                         delete asteroid;
                         asteroid=NULL;
-                    }
+                    }//end else
 
 
-                }
+                }//end if
 
 
-            }
+            }//end for j
 
             if(removeBullet)
             {
@@ -301,12 +304,93 @@ void Scene::collisionDetection()
                 bulletList->removeAt(i);
                 delete bullet;
                 bullet=NULL;
-            }
-        }
+            }//end if
+        }//end for k
+    }//end if
+
+
+    //When all steroids are gone create more
+    if(asteroidList->isEmpty())
+    {
+        MAX_NUM_OF_ASTEROIDS=MAX_NUM_OF_ASTEROIDS+1;
+        generateAsteroids();
     }
 
+    //if Station hits an Asteroid
+    if(alive)
+    {
+        removeStation=false;
 
-}
+        for(z=0; z<=asteroidList->size()-1; z=z+1)
+        {
+            asteroid= asteroidList->at(z);
+
+            if(sqrt(pow(asteroid->x()-station->x(),2)+pow(asteroid->y()-station->y(),2))<18*asteroid->getSize())
+            {
+                removeStation=true;
+
+                if(asteroid->getSize()<=.49*startSize)
+                {
+                    asteroidList->removeAt(z);
+                    delete asteroid;
+                    asteroid=NULL;
+                }// end if
+
+                else
+                {
+
+                    asteroidX=asteroid->x();
+                    asteroidY=asteroid->y();
+
+                        //Splitting Asteroid
+                        for (y=0; y<=1; y=y+1)
+                        {
+                           //Location of New Ateroids with respect to Old Asteroid
+
+                            asteroidMoveX=(.85+.3*y)*asteroid->getXMove();
+                            asteroidMoveY=(1.15-.3*y)*asteroid->getYMove();
+
+                            Asteroid *newAsteroid= new Asteroid (asteroidX, asteroidY, asteroidMoveX, asteroidMoveY, .7*asteroid->getSize());
+                            asteroidList->append(newAsteroid);
+                            this->addItem(newAsteroid);
+
+                        }//end for y
+
+                    this->removeItem(asteroid);
+                    asteroidList->removeAt(z);
+                    delete asteroid;
+                    asteroid=NULL;
+                }//end else
+            }//end if
+        }//end for z
+
+
+        if(removeStation)
+        {
+            alive=false;
+            newLifeDelay=75; //waits 3 seconds to redraw Station
+
+
+            delete station;
+            station=NULL;
+
+
+        }
+    }//end if
+   if(not alive)
+        newLifeDelay--;
+
+    if(newLifeDelay<=0 and not alive)
+    {
+        alive=true;
+        station = new Station(WINDOW_WIDTH/2, WINDOW_HEIGHT/2 );
+        this->addItem(station);
+        station->setXMove(.001);
+        station->setYMove(.001);
+        stationRotation=90;
+    }
+
+}//end collision detection
 
 
 
@@ -520,14 +604,15 @@ teroidList->at(j);
 
 void Scene:: keyPressEvent(QKeyEvent *event)
 {
-
+    if(alive)
+    {
     switch(event->key())
     {
 
         case Qt::Key_Left:
         {
              stationRotation = (stationRotation - 10) % 360;
-             //cout << stationRotation << endl;//for debugging
+
              if(stationRotation > 359) stationRotation -= 360; //Defensive
              break;
         }
@@ -535,7 +620,7 @@ void Scene:: keyPressEvent(QKeyEvent *event)
          case Qt::Key_Right:
          {
                 stationRotation = (stationRotation + 10) % 360;
-                //cout << stationRotation << endl;//for debugging
+
                 if(stationRotation < 0) stationRotation += 360; //Defensive
                 break;
         }generateBullets();
@@ -572,6 +657,7 @@ void Scene:: keyPressEvent(QKeyEvent *event)
             break;
 
         }
+    }
     }
 
 }

@@ -39,6 +39,7 @@ public:
   void setYMove(qreal);
   qreal getXMove();
   qreal getYMove();
+  bool getalive();
 
   void advance(int);
 

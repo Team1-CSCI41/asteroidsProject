@@ -82,6 +82,8 @@ Scene::Scene() : QGraphicsScene()
 {
   // create timer
 
+
+
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(advance()));
     connect(timer, SIGNAL(timeout()), this, SLOT(manageObjects()));
@@ -168,18 +170,23 @@ void Scene::generateAsteroids()
             asteroidX = qrand() % WINDOW_WIDTH-500;
             asteroidY = qrand() % WINDOW_HEIGHT-500;
         }//end do
-        //Asteroids must spawn 100+ pixels from ship
-        while (pow(asteroidX - station->x(), 2) + pow(asteroidY - station->y(), 2) < pow(100, 2));
-        asteroidMoveX = qrand() % 6 - 2.5;
-        asteroidMoveY = qrand() % 6 - 2.5;
+        while (pow(asteroidX - station->x(), 2) + pow(asteroidY - station->y(), 2) < pow(10, 2));
+
+
+
+        asteroidMoveX = qrand() % 6 - 52.5;
+        asteroidMoveY = qrand() % 6 - 52.5;
         //Instantiate asteroid, add to list, and draw it
         Asteroid *asteroid = new Asteroid(asteroidX, asteroidY, asteroidMoveX, asteroidMoveY, startSize);
+
         asteroidList->append(asteroid);
         this->addItem(asteroid);
     }//end for
 }
 
 
+void Scene::collisionDetection(){
+}
 
 
 
@@ -415,7 +422,7 @@ void Scene:: keyPressEvent(QKeyEvent *event)
         case Qt::Key_Up:
         //case Qt::Key_w:
         {
-                double accel = 0.5;
+                double accel = 0.3;
                 stationMoveX = station->getXMove() + accel*qCos((stationRotation + 180) * PI / 180);
                 stationMoveY = station->getYMove() + accel*qSin((stationRotation + 180) * PI / 180);
                 station->setXMove(stationMoveX);

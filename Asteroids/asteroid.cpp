@@ -87,6 +87,8 @@ void  Asteroid::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 
 
     painter->drawRect( -8*size,  -8*size,  16*size,   16*size );
+    painter->setPen( QPen( Qt::cyan, 2 ) );
+    painter->drawRect(-9*size,  -9*size,  18*size,   18*size);
 
 }
 

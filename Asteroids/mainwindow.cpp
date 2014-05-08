@@ -66,7 +66,10 @@ MainWindow::MainWindow() : QMainWindow()
   //QAction* previewAction = fileMenu->addAction( "Print pre&view...", this, SLOT(filePrintPreview()) );
   //QAction* printAction   = fileMenu->addAction( "&Print...",         this, SLOT(filePrint()) );
   //fileMenu->addSeparator();
-                           fileMenu->addAction( "&Quit",             this, SLOT(close()) );
+  QAction *newAction = fileMenu->addAction("&New Game", this, SLOT(fileNew()));
+  fileMenu->addAction( "&Quit",             this, SLOT(close()) );
+
+
   //newAction->setShortcut( QKeySequence::New );
   //saveAction->setShortcut( QKeySequence::Save );
   //openAction->setShortcut( QKeySequence::Open );
@@ -120,6 +123,19 @@ MainWindow::MainWindow() : QMainWindow()
 
   //sets window size by default
   setFixedSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+}
+
+void MainWindow::fileNew()
+{
+    Scene *newScene= new Scene();
+
+    QGraphicsView *view= dynamic_cast<QGraphicsView*>(centralWidget());
+    view->setScene(newScene);
+    delete m_scene;
+    m_scene = newScene;
+    view->setAlignment(Qt::AlignLeft | Qt::AlignRight);
+    view->setFrameStyle(0);
+    setCentralWidget(view);
 }
 
 /************************************ showMessage ************************************/
@@ -277,37 +293,7 @@ void  MainWindow::print( QPrinter* printer )
 
 /************************************** fileNew **************************************/
 
-void  MainWindow::fileNew()
-{
-  // if no stations (only default top-left scene anchor) then nothing to do
-  /*if ( m_scene->items().count() <= 1 ) return;
 
-  // check if user wants to save before starting new simulation
-  while (true)
-    switch ( QMessageBox::warning( this, "QSimulate",
-        "Do you want to save before starting new?",
-        QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel ) )
-    {
-      case QMessageBox::Save:
-        // if save not successful ask again
-        if ( !fileSaveAs() ) break;
-
-      case QMessageBox::Discard:
-        // start new simulation
-        {
-          m_undoStack->clear();
-          Scene*          newScene = new Scene( m_undoStack );
-          QGraphicsView*  view     = dynamic_cast<QGraphicsView*>( centralWidget() );
-          view->setScene( newScene );
-          delete m_scene;
-          m_scene = newScene;
-        }
-        return;
-
-      default:    // "Cancel"
-        return;
-    }*/
-}
 
 /************************************ closeEvent *************************************/
 

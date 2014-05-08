@@ -81,6 +81,9 @@ void  Bullet::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
     painter->setRenderHint( QPainter::Antialiasing );
     painter->setPen( QPen( Qt::white, 2 ) );
     painter->drawEllipse(0, 0, 3, 3);
+
+    painter->setPen( QPen( Qt::cyan, 2 ) );
+    painter->drawRect(-2, -2, 6, 6);
 }
 
 

@@ -58,8 +58,8 @@ Asteroid *asteroid, newAsteroid;
 QList <Asteroid*> *asteroidList = new QList<Asteroid*>;
 QList <Bullet*> *bulletList = new QList<Bullet*>;
 
-int MAX_NUM_OF_ASTEROIDS = 4;
-int MAX_NUM_OF_BULLETS = 5;
+int MAX_NUM_OF_ASTEROIDS = 1;
+int MAX_NUM_OF_BULLETS = 50;
 
 bool alive;
 
@@ -78,7 +78,7 @@ qreal           bulletMoveY;
 qreal           asteroidMoveX;
 qreal           asteroidMoveY;
 qreal           startSize = 2.2;
-int             i, j, k, y, z, newLifeDelay=0;
+int             i, j, k, x, y, z, newLifeDelay=0;
 
 /*************************************************************************************/
 /******************** Scene representing the simulated landscape *********************/
@@ -222,11 +222,14 @@ void Scene::generateBullets()
 
 void Scene::collisionDetection()
 {
+    //cout<<asteroidList->size()<<"  --- "<<endl;
+
+
     Bullet *bullet;
-    Asteroid *asteroid, newAsteroid;
-    qreal aLeft, aRight, aTop, aBottom, bX, bY, xOffset=0, yOffset=-3;
-    qreal newStationXMove, newStationYMove, newAsteroidXMove, newAsteroidYMove;
-    bool removeBullet, removeStation, isCenterClear;
+    Asteroid *asteroid;//, newAsteroid;
+    qreal aLeft, aRight, aTop, aBottom, bX, bY;//, xOffset=0, yOffset=0;
+    //qreal newStationXMove, newStationYMove, newAsteroidXMove, newAsteroidYMove;
+    bool removeBullet, removeStation; //isCenterClear;
 
     //Check if Bullet list is Full
     if( not bulletList->isEmpty())
@@ -234,9 +237,9 @@ void Scene::collisionDetection()
         //Bullet's Data
         for(k=0; k<=bulletList->size()-1; k=k+1)
         {
-            bullet=bulletList->at(i);
-            bX=bullet->x()+xOffset;
-            bY=bullet->y()+yOffset;
+            bullet=bulletList->at(k);
+            bX=bullet->x();//+xOffset;
+            bY=bullet->y();//+yOffset;
             removeBullet= false;
 
             //check if Bullet is still alive
@@ -244,22 +247,27 @@ void Scene::collisionDetection()
             {
                 removeBullet=true;
             }
+
             //Asteroids Data
             for (j=0; j<=asteroidList->size()-1; j=j+1)
             {
                 asteroid=asteroidList->at(j);
-                aLeft=asteroid->x()-8*asteroid->getSize();
-                aRight=asteroid->x()+8*asteroid->getSize();
-                aTop=asteroid->y()-16*asteroid->getSize();
-                aBottom=asteroid->y()+16*asteroid->getSize();
+                //aLeft=asteroid->x()-8*asteroid->getSize();
+                //aRight=asteroid->x()+8*asteroid->getSize();
+                //aTop=asteroid->y()-16*asteroid->getSize();
+                //aBottom=asteroid->y()+16*asteroid->getSize();
+
+                aLeft=asteroid->x() - 8*asteroid->getSize();
+                aRight=asteroid->x() + 8*asteroid->getSize();
+                aTop=asteroid->y() - 16*asteroid->getSize();
+                aBottom=asteroid->y() + 16*asteroid->getSize();
 
                 //Bullet hits the Asteroid
                 if( bX >= aLeft and bX <= aRight and bY >= aTop and bY<=aBottom)
                 {
                     removeBullet = true;
 
-
-                    if (asteroid->getSize()<=.49*startSize)
+                  if (asteroid->getSize()<=.49*startSize)
                     {
                         asteroidList->removeAt(j);
                         delete asteroid;
@@ -279,6 +287,8 @@ void Scene::collisionDetection()
 
                                 asteroidMoveX=(.85+.3*z)*asteroid->getXMove();
                                 asteroidMoveY=(1.15-.3*z)*asteroid->getYMove();
+                                asteroidX=asteroidX+20*z;
+                                asteroidY=asteroidY+20*z;
 
                                 Asteroid *newAsteroid= new Asteroid (asteroidX, asteroidY, asteroidMoveX, asteroidMoveY, .7*asteroid->getSize());
                                 asteroidList->append(newAsteroid);
@@ -290,6 +300,7 @@ void Scene::collisionDetection()
                         asteroidList->removeAt(j);
                         delete asteroid;
                         asteroid=NULL;
+
                     }//end else
 
 
@@ -301,7 +312,7 @@ void Scene::collisionDetection()
             if(removeBullet)
             {
                 this->removeItem(bullet);
-                bulletList->removeAt(i);
+                bulletList->removeAt(k);
                 delete bullet;
                 bullet=NULL;
             }//end if
@@ -321,9 +332,9 @@ void Scene::collisionDetection()
     {
         removeStation=false;
 
-        for(z=0; z<=asteroidList->size()-1; z=z+1)
+        for(x=0; x<=asteroidList->size()-1; x=x+1)
         {
-            asteroid= asteroidList->at(z);
+            asteroid= asteroidList->at(x);
 
             if(sqrt(pow(asteroid->x()-station->x(),2)+pow(asteroid->y()-station->y(),2))<18*asteroid->getSize())
             {
@@ -331,7 +342,7 @@ void Scene::collisionDetection()
 
                 if(asteroid->getSize()<=.49*startSize)
                 {
-                    asteroidList->removeAt(z);
+                    asteroidList->removeAt(x);
                     delete asteroid;
                     asteroid=NULL;
                 }// end if
@@ -339,14 +350,15 @@ void Scene::collisionDetection()
                 else
                 {
 
-                    asteroidX=asteroid->x();
-                    asteroidY=asteroid->y();
+                   // asteroidX=asteroid->x();
+                    //asteroidY=asteroid->y();
 
                         //Splitting Asteroid
                         for (y=0; y<=1; y=y+1)
                         {
                            //Location of New Ateroids with respect to Old Asteroid
-
+                            asteroidX=asteroid->x();
+                            asteroidY=asteroid->y();
                             asteroidMoveX=(.85+.3*y)*asteroid->getXMove();
                             asteroidMoveY=(1.15-.3*y)*asteroid->getYMove();
 
@@ -357,7 +369,7 @@ void Scene::collisionDetection()
                         }//end for y
 
                     this->removeItem(asteroid);
-                    asteroidList->removeAt(z);
+                    asteroidList->removeAt(x);
                     delete asteroid;
                     asteroid=NULL;
                 }//end else

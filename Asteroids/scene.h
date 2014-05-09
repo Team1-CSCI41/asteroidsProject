@@ -31,6 +31,8 @@ class Bullet;
 class Asteroid;
 
 #include <QGraphicsScene>
+#include <QtGui>
+
 
 extern int stationRotation;
 
@@ -49,6 +51,7 @@ public:
   // A function that generates the asteroids/creates asteroid list
   void generateAsteroids();
   void generateBullets();
+  bool alive;
 /*
   qreal           stationX;
   qreal           stationY;
@@ -82,6 +85,10 @@ protected:
   Station*  station;
   Bullet*  bullet;
   Asteroid*  asteroid;
+
+  QString livesString;
+  QLabel *livesLabel;
+  QLabel *gameOverLabel;
 
 
 

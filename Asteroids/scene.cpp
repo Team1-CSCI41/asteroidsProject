@@ -32,7 +32,6 @@
 #include "commandstationdelete.h"
 #include "commandstationmove.h"
 #include <QGraphicsSceneMouseEvent>
-#include <QGraphicsSceneContextMenuEvent>
 #include <QMenu>
 #include <QAction>
 #include <QUndoStack>
@@ -41,10 +40,12 @@
 #include <QTimer>
 #include <QTime>
 #include <QList>
+#include <QLabel>
 #include <QKeyEvent>
 #include <QtCore/qmath.h>
 #include <iostream>
 #include <cmath>
+#include <QPainter>
 
 using namespace std;
 int stationRotation=90;
@@ -58,10 +59,10 @@ Asteroid *asteroid, newAsteroid;
 QList <Asteroid*> *asteroidList = new QList<Asteroid*>;
 QList <Bullet*> *bulletList = new QList<Bullet*>;
 
-int MAX_NUM_OF_ASTEROIDS = 1;
+int MAX_NUM_OF_ASTEROIDS = 5;
 int MAX_NUM_OF_BULLETS = 50;
 
-bool alive;
+
 
 
 
@@ -78,7 +79,9 @@ qreal           bulletMoveY;
 qreal           asteroidMoveX;
 qreal           asteroidMoveY;
 qreal           startSize = 2.2;
-int             i, j, k, x, y, z, newLifeDelay=0;
+
+int             i, j, k, x, y, z, newLifeDelay=0, lives=5;
+bool            game;
 
 /*************************************************************************************/
 /******************** Scene representing the simulated landscape *********************/
@@ -103,45 +106,38 @@ Scene::Scene() : QGraphicsScene()
     // create invisible item to provide default top-left anchor to scene
     addLine( 0, 0, 0, 1, QPen(Qt::transparent, 1) );
 
+
     alive=true;
+    game=true;
+    //Shows Lives
+    livesString =livesString.setNum(lives);
+    livesString.append(" Lives");
+    livesLabel = new QLabel (livesString,0);
+    livesLabel->setStyleSheet("QLabel{background: transparent; color :green; font:16px;}");
+    livesLabel->move(WINDOW_WIDTH-150,50);
+    this->addWidget(livesLabel);
+
+
 
 
 
   // connect selectionChanged signal to selectStations slot
   connect( this, SIGNAL(selectionChanged()), this, SLOT(selectStations()) );
-/*
-  // set local variables and check if existing station clicked
-        stationX = .5*WINDOW_WIDTH;
-        stationY = .45*WINDOW_HEIGHT;
-        asteroidX = 0.75*WINDOW_WIDTH;
-        asteroidY = 0.75*WINDOW_HEIGHT;
-        bulletX = 0.25*WINDOW_WIDTH;
-        bulletY = 0.25*WINDOW_HEIGHT;
-        xDest, yDest;
-*/
+
   station = dynamic_cast<Station*>( itemAt( stationX, stationY ) );
 
   station = new Station(stationX,stationY );
   this->addItem(station);
   station->setXMove(.001);
   station->setYMove(.001);
-/*
-  asteroid= new Asteroid(asteroidX, asteroidY);
-  this->addItem(asteroid);
-  asteroid->setXMove(.001);
-  asteroid->setYMove(.001);
-*/
 
   generateAsteroids();
 
 
 
-/*
-  bullet= new Bullet(bulletX, bulletY);
-  this->addItem(bullet);
-  bullet->setXMove(.001);
-  bullet->setYMove(.001);
-*/
+
+
+
   /*
   Asteroid*  asteroid = dynamic_cast<Asteroid*>( itemAt( asteroidX, asteroidY) );
   Bullet*  bullet = dynamic_cast<Bullet*>( itemAt( bulletX, bulletY ) );
@@ -163,7 +159,6 @@ Scene::Scene() : QGraphicsScene()
 }
 
 
-
 void Scene::generateAsteroids()
 {
     //Seed random number generator
@@ -175,17 +170,23 @@ void Scene::generateAsteroids()
     for(int i = 0; i <= MAX_NUM_OF_ASTEROIDS - 1; i++)
     {
         //Randomly place asteroid and set initial velocity
-        do
+        if(alive)
         {
-            asteroidX =qrand() % WINDOW_WIDTH-500;
-            asteroidY =qrand() % WINDOW_HEIGHT-500;
+            do
+            {
+                asteroidX =qrand() % WINDOW_WIDTH;
+                asteroidY =qrand() % WINDOW_HEIGHT;
 
 
 
-        }//end do
-        while (pow(asteroidX - station->x(), 2) + pow(asteroidY - station->y(), 2) < pow(10, 2));
-
-
+            }//end do
+            while (pow(asteroidX - station->x(), 2) + pow(asteroidY - station->y(), 2) < pow(50, 2));
+        }//end if(alive)
+        else
+        {
+            asteroidX =qrand() % WINDOW_WIDTH;
+            asteroidY =qrand() % WINDOW_HEIGHT;
+       }
 
         asteroidMoveX = qrand() % 6 - 2.5;
         asteroidMoveY = qrand() % 6 - 2.5;
@@ -350,8 +351,7 @@ void Scene::collisionDetection()
                 else
                 {
 
-                   // asteroidX=asteroid->x();
-                    //asteroidY=asteroid->y();
+
 
                         //Splitting Asteroid
                         for (y=0; y<=1; y=y+1)
@@ -381,6 +381,31 @@ void Scene::collisionDetection()
         {
             alive=false;
             newLifeDelay=75; //waits 3 seconds to redraw Station
+            lives=lives-1;
+            livesString = livesString.setNum(lives);
+            if(lives!=1)
+            {
+                livesString.append(" Lives");
+            }
+            else
+            {
+                livesString.append(" Life");
+                livesLabel->setStyleSheet("QLabel{background: transparent; color :red; font:20px;}");
+
+            }
+
+            livesLabel->setText(livesString);
+            if(lives==0)
+            {
+                gameOverLabel=new QLabel("GAME OVER");
+                gameOverLabel->setStyleSheet("QLabel{background: transparent; color :red; font:40px;}");
+                gameOverLabel->move(0.5*WINDOW_WIDTH-125, 0.5*WINDOW_HEIGHT-50);
+                this->addWidget(gameOverLabel);
+                lives=5;
+                game=false;
+
+            }
+
 
 
             delete station;
@@ -392,7 +417,7 @@ void Scene::collisionDetection()
    if(not alive)
         newLifeDelay--;
 
-    if(newLifeDelay<=0 and not alive)
+   if(newLifeDelay<=0 and (not alive) and  game)
     {
         alive=true;
         station = new Station(WINDOW_WIDTH/2, WINDOW_HEIGHT/2 );
@@ -400,6 +425,7 @@ void Scene::collisionDetection()
         station->setXMove(.001);
         station->setYMove(.001);
         stationRotation=90;
+
     }
 
 }//end collision detection
@@ -510,7 +536,7 @@ void  Scene::mousePressEvent( QGraphicsSceneMouseEvent* event )
 
   // call base mousePressEvent to handle other mouse press events such as selecting
   QGraphicsScene::mousePressEvent( event );*/
-
+    if(alive)
     generateBullets();
 }
 
@@ -549,6 +575,7 @@ void  Scene::selectStations()
 
 void  Scene::mouseReleaseEvent( QGraphicsSceneMouseEvent* event )
 {
+    /*
   // if any stations moved, then create undo commands
   foreach( StationPos station , m_stations )
     if ( station.first->pos() != station.second )
@@ -559,6 +586,7 @@ void  Scene::mouseReleaseEvent( QGraphicsSceneMouseEvent* event )
   // refresh record of selected stations and call base mouseReleaseEvent
   selectStations();
   QGraphicsScene::mouseReleaseEvent( event );
+  */
 }
 
 /************************************ writeStream ************************************/
@@ -603,16 +631,6 @@ void  Scene::readStream( QXmlStreamReader* stream )
 
 //--------------------------------------------------------------------------------
 
-/*void Scene:: createAsteroid()
-{
-    QTime now= QTime::currentTime();
-    qsrand(now.msec());
-teroidList->at(j);
-    //empty list
-    asteroidList->clear();
-}*/
-
-//--------------------------------------------------------------------------------
 
 void Scene:: keyPressEvent(QKeyEvent *event)
 {

@@ -111,8 +111,6 @@ void  Station::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     painter->drawLine( +10*qCos((stationRotation+90)*PI/180),+10*qSin((stationRotation+90)*PI/180),  +20*qCos((stationRotation+180)*PI/180),+20*qSin((stationRotation+180)*PI/180) );
     painter->drawLine( +20*qCos((stationRotation+180)*PI/180),+20*qSin((stationRotation+180)*PI/180),  +10*qCos((stationRotation-90)*PI/180),  +10*qSin((stationRotation-90)*PI/180) );
 
-    painter->setPen( QPen( Qt::cyan, 2 ) );
-    painter->drawRect( -21, -21, 42, 42);
 
 
 }

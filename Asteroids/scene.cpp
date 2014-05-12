@@ -22,15 +22,6 @@
 #include "mainwindow.h"
 #include "scene.h"
 #include "station.h"
-#include "commandbulletadd.h"
-#include "commandbulletdelete.h"
-#include "commandbulletmove.h"
-#include "commandasteroidadd.h"
-#include "commandasteroiddelete.h"
-#include "commandasteroidmove.h"
-#include "commandstationadd.h"
-#include "commandstationdelete.h"
-#include "commandstationmove.h"
 #include <QGraphicsSceneMouseEvent>
 #include <QMenu>
 #include <QAction>
@@ -134,28 +125,6 @@ Scene::Scene() : QGraphicsScene()
   generateAsteroids();
 
 
-
-
-
-
-  /*
-  Asteroid*  asteroid = dynamic_cast<Asteroid*>( itemAt( asteroidX, asteroidY) );
-  Bullet*  bullet = dynamic_cast<Bullet*>( itemAt( bulletX, bulletY ) );
-
-  //m_undoStack->push( new CommandStationAdd( this, stationX, stationY ) );
-  m_undoStack->push( new CommandAsteroidAdd( this, asteroidX, asteroidY ) );
-  m_undoStack->push( new CommandBulletAdd( this, bulletX, bulletY, bulletMoveX, bulletMoveY ) );
-  emit message( QString("Ship add at %1,%2").arg(stationX).arg(stationY) );
-  emit message( QString("Asteroid add at %1,%2").arg(asteroidX).arg(asteroidY) );
-  emit message( QString("Bullet add at %1,%2").arg(bulletX).arg(bulletY) );
-
-  /*
-  asteroid = dynamic_cast<Asteroid*>( itemAt( asteroidX, asteroidY ));
-  m_undoStack->push( new CommandAsteroidDelete( this, asteroid ) );
-
-  dynamic_cast<Asteroid*>(itemAt(50,300));
-  m_undoStack->push( new CommandAsteroidAdd( this, 50, 300 ) );
-  */
 }
 
 
@@ -253,10 +222,7 @@ void Scene::collisionDetection()
             for (j=0; j<=asteroidList->size()-1; j=j+1)
             {
                 asteroid=asteroidList->at(j);
-                //aLeft=asteroid->x()-8*asteroid->getSize();
-                //aRight=asteroid->x()+8*asteroid->getSize();
-                //aTop=asteroid->y()-16*asteroid->getSize();
-                //aBottom=asteroid->y()+16*asteroid->getSize();
+
 
                 aLeft=asteroid->x() - 8*asteroid->getSize();
                 aRight=asteroid->x() + 8*asteroid->getSize();
@@ -456,64 +422,15 @@ void  Scene::manageObjects()
   if(yDest < 0)             yDest += WINDOW_HEIGHT - 1;
   if(yDest > WINDOW_HEIGHT) yDest -= WINDOW_HEIGHT;
 
-  //Delete asteroid from old position
- // Asteroid* asteroid = dynamic_cast<Asteroid*>(itemAt(asteroidX, asteroidY));
- // m_undoStack->push(new CommandAsteroidDelete(this, asteroid));
 
-  //Draw asteroid at new position
- // dynamic_cast<Asteroid*>(itemAt(xDest, yDest));
- // m_undoStack->push(new CommandAsteroidAdd(this, xDest, yDest));
-//int   stationRotation = 90;
-  //Update position to new position
   asteroidX = xDest;
   asteroidY = yDest;
-/*
-  //***BULLET:
 
-  //Calculate new location
-  xDest = bulletX + bulletMoveX;
-  yDest = bulletY + bulletMoveY;
-
-  //If bullet moves off screen, wrap to other side
-  if(xDest <0)             xDest += WINDOW_WIDTH - 1;
-  if(xDest > WINDOW_WIDTH)  xDest -= WINDOW_WIDTH;
-  if(yDest < 0)             yDest += WINDOW_HEIGHT - 1;
-  if(yDest > WINDOW_HEIGHT) yDest -= WINDOW_HEIGHT;
-
-  //Delete bullet from old position
-  Bullet* bullet = dynamic_cast<Bullet*>(itemAt(bulletX, bulletY));
-  m_undoStack->push(new CommandBulletDelete(this, bullet));
-
-  //Draw bullet at new position
-  dynamic_cast<Bullet*>(itemAt(xDest, yDest));
-  m_undoStack->push(new CommandBulletAdd(this, xDest, yDest, bulletMoveX, bulletMoveY));
-
-  //Update position to new position
-  bulletX = xDest;
-  bulletY = yDest;
-*/
   //***SHIP:
   //Calculate new location
   xDest = stationX + stationMoveX;
   yDest = stationY + stationMoveY;
 
-  //If ship moves off screen, wrap to other side
-  /*if(xDest < 0)             xDest += WINDOW_WIDTH - 1;
-  if(xDest > WINDOW_WIDTH)  xDest -= WINDOW_WIDTH;
-  if(yDest < 0)             yDest += WINDOW_HEIGHT - 1;
-  if(yDest > WINDOW_HEIGHT) yDest -= WINDOW_HEIGHT;*/
-
-  /*//Delete ship from old position
-  Station* station = dynamic_cast<Station*>(itemAt(stationX, stationY));
-  m_undoStack->push(new CommandStationDelete(this, station));*/
-
-  /*//Draw ship at new position
-  dynamic_cast<Station*>(itemAt(xDest, yDest));
-  m_undoStack->push(new CommandStationAdd(this, xDest, yDest));*/
-
-  //Update position to new position
-  //stationX = xDest;
-  //stationY = yDest;
 
     }
 }
@@ -522,20 +439,7 @@ void  Scene::manageObjects()
 
 void  Scene::mousePressEvent( QGraphicsSceneMouseEvent* event )
 {
-  /*// set local variables and check if existing station clicked
-  qreal           x = event->scenePos().x();
-  qreal           y = event->scenePos().y();
-  Station*  station = dynamic_cast<Station*>( itemAt( x, y ) );
 
-  // if station not clicked and right mouse button pressed, create new Station
-  if ( station == 0 && event->button() == Qt::LeftButton )
-  {
-    m_undoStack->push( new CommandStationAdd( this, x, y ) );
-    emit message( QString("Station add at %1,%2").arg(x).arg(y) );
-  }
-
-  // call base mousePressEvent to handle other mouse press events such as selecting
-  QGraphicsScene::mousePressEvent( event );*/
     if(alive)
     generateBullets();
 }
@@ -544,49 +448,21 @@ void  Scene::mousePressEvent( QGraphicsSceneMouseEvent* event )
 
 void  Scene::contextMenuEvent( QGraphicsSceneContextMenuEvent* event )
 {
-  // we only want to display a menu if user clicked a station
-  qreal     x       = event->scenePos().x();
-  qreal     y       = event->scenePos().y();
-  Station*  station = dynamic_cast<Station*>( itemAt( x, y ) );
-  if ( station == 0 ) return;
 
-  // display context menu and action accordingly
-  QMenu     menu;
-  QAction*  deleteAction = menu.addAction("Delete Station");
-  if ( menu.exec( event->screenPos() ) == deleteAction )
-  {
-    m_undoStack->push( new CommandStationDelete( this, station ) );
-    emit message( QString("Station deleted at %1,%2").arg(x).arg(y) );
-  }
 }
 
 /********************************** selectStations ***********************************/
 
 void  Scene::selectStations()
-{m_undoStack->push( new CommandBulletAdd( this, bulletX, bulletY, bulletMoveX, bulletMoveY) );
-  // refresh record of selected stations and their starting positions
-  m_stations.clear();
-  foreach( QGraphicsItem* item, selectedItems() )
-    if ( dynamic_cast<Station*>( item ) )
-    m_stations.append( qMakePair( dynamic_cast<Station*>( item ), item->pos() ) );
+{
 }
 
 /********************************* mouseReleaseEvent *********************************/
 
 void  Scene::mouseReleaseEvent( QGraphicsSceneMouseEvent* event )
 {
-    /*
-  // if any stations moved, then create undo commands
-  foreach( StationPos station , m_stations )
-    if ( station.first->pos() != station.second )
-      m_undoStack->push( new CommandStationMove( station.first,
-                             station.second.x(), station.second.y(),
-                             station.first->x(), station.first->y() ) );
-
-  // refresh record of selected stations and call base mouseReleaseEvent
-  selectStations();
-  QGraphicsScene::mouseReleaseEvent( event );
-  */
+    if(alive)
+    generateBullets();
 }
 
 /************************************ writeStream ************************************/

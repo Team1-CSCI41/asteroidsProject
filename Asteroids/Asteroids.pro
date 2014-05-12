@@ -19,17 +19,8 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     scene.h \
-    commandstationadd.h \
-    commandstationmove.h \
-    commandstationdelete.h \
     station.h \
     asteroid.h \
-    bullet.h \
-    commandbulletadd.h \
-    commandbulletdelete.h \
-    commandbulletmove.h \
-    commandasteroidadd.h \
-    commandasteroiddelete.h \
-    commandasteroidmove.h
+    bullet.h
 
 FORMS    += mainwindow.ui

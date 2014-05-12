@@ -31,30 +31,16 @@ MainWindow::MainWindow() : QMainWindow()
   this->setStyleSheet("background-color:black;");
   //
 
-  // add drop down menus
+
   QMenu*  fileMenu = menuBar()->addMenu( "&File" );
   menuBar()->setStyleSheet("background-color:white");
-  //QMenu*  editMenu = menuBar()->addMenu( "&Edit" );
-  //QMenu*  viewMenu = menuBar()->addMenu( "&View" );
-  //menuBar()->addMenu( "&Simulate" );
-  //menuBar()->addMenu( "&Help" );
 
-  // create file menu options
-  //QAction* newAction     = fileMenu->addAction( "&New",              this, SLOT(fileNew()) );
-  //QAction* saveAction    = fileMenu->addAction( "&Save As...",       this, SLOT(fileSaveAs()) );
-  //QAction* openAction    = fileMenu->addAction( "&Open ...",         this, SLOT(fileOpen()) );
-  //fileMenu->addSeparator();
-  //QAction* previewAction = fileMenu->addAction( "Print pre&view...", this, SLOT(filePrintPreview()) );
-  //QAction* printAction   = fileMenu->addAction( "&Print...",         this, SLOT(filePrint()) );
-  //fileMenu->addSeparator();
   QAction *newAction = fileMenu->addAction("&New Game", this, SLOT(fileNew()));
   fileMenu->addAction( "&Quit",             this, SLOT(close()) );
 
 
   //newAction->setShortcut( QKeySequence::New );
-  //saveAction->setShortcut( QKeySequence::Save );
-  //openAction->setShortcut( QKeySequence::Open );
-  //printAction->setShortcut( QKeySequence::Print );
+
 
   // create undo stack and associated menu actions
   m_undoStack = new QUndoStack( this );
@@ -64,30 +50,11 @@ MainWindow::MainWindow() : QMainWindow()
   QAction* redoAction = m_undoStack->createRedoAction( this );
   undoAction->setShortcut( QKeySequence::Undo );
   redoAction->setShortcut( QKeySequence::Redo );
-  //editMenu->addAction( undoAction );
-  //editMenu->addAction( redoAction );
 
   // create toolbar, set icon size, and add actions
-  //QToolBar*   toolBar = addToolBar( "Standard" );
   QStyle*     style   = this->style();
   QSize       size    = style->standardIcon(QStyle::SP_DesktopIcon).actualSize( QSize(99,99) );
-  //toolBar->setIconSize( size );
-  //newAction->setIcon( style->standardIcon(QStyle::SP_DesktopIcon) );
-  //openAction->setIcon( style->standardIcon(QStyle::SP_DialogOpenButton) );
-  //saveAction->setIcon( style->standardIcon(QStyle::SP_DialogSaveButton) );
-  //previewAction->setIcon( style->standardIcon(QStyle::SP_FileDialogContentsView) );
-  //printAction->setIcon( style->standardIcon(QStyle::SP_ComputerIcon) );
-  //undoAction->setIcon( style->standardIcon(QStyle::SP_ArrowBack) );
-  //redoAction->setIcon( style->standardIcon(QStyle::SP_ArrowForward) );
-  //toolBar->addAction( newAction );
-  //toolBar->addAction( openAction );
-  //toolBar->addAction( saveAction );
-  //toolBar->addSeparator();
-  //toolBar->addAction( previewAction );
-  //toolBar->addAction( printAction );
-  //toolBar->addSeparator();
-  //toolBar->addAction( undoAction );
-  //toolBar->addAction( redoAction );
+
 
   // create scene and central widget view of scene
   m_scene               = new Scene();
@@ -134,47 +101,14 @@ void  MainWindow::showMessage( QString msg )
 
 void  MainWindow::showUndoStack()
 {
-  // open up undo stack window
-  /*if ( m_undoView == 0 )
-  {
-    m_undoView = new QUndoView( m_undoStack );
-    m_undoView->setWindowTitle( "QSimulate - Undo stack" );
-    m_undoView->setAttribute( Qt::WA_QuitOnClose, false );
-  }
-  m_undoView->show();*/
+
 }
 
 /************************************ fileSaveAs *************************************/
 
 bool  MainWindow::fileSaveAs()
 {
-  // get user to select filename and location
-  /*QString filename = QFileDialog::getSaveFileName();
-  if ( filename.isEmpty() ) return false;
 
-  // open the file and check we can write to it
-  QFile file( filename );
-  if ( !file.open( QIODevice::WriteOnly ) )
-  {
-    showMessage( QString("Failed to write to '%1'").arg(filename) );
-    return false;
-  }
-
-  // open an xml stream writer and write simulation data
-  QXmlStreamWriter  stream( &file );
-  stream.setAutoFormatting( true );
-  stream.writeStartDocument();
-  stream.writeStartElement( "qsimulate" );
-  stream.writeAttribute( "version", "2009-05" );
-  stream.writeAttribute( "user", QString(getenv("USERNAME")) );
-  stream.writeAttribute( "when", QDateTime::currentDateTime().toString(Qt::ISODate) );
-  m_scene->writeStream( &stream );
-  stream.writeEndDocument();
-
-  // close the file and display useful message
-  file.close();
-  showMessage( QString("Saved to '%1'").arg(filename) );
-  return true;*/
 }
 
 /************************************* fileOpen **************************************/
@@ -232,47 +166,21 @@ bool  MainWindow::fileOpen()
 
 void  MainWindow::filePrintPreview()
 {
-  // display print preview dialog
-  /*QPrinter             printer( QPrinter::ScreenResolution ); // QPrinter::HighResolution );
-  QPrintPreviewDialog  preview( &printer, this );
-  connect( &preview, SIGNAL(paintRequested(QPrinter*)), SLOT(print(QPrinter*)) );
-  preview.exec();*/
+
 }
 
 /************************************ filePrint **************************************/
 
 void  MainWindow::filePrint()
 {
-  // display print dialog and if accepted print
-  /*QPrinter       printer( QPrinter::ScreenResolution );
-  QPrintD18ialog   dialog( &printer, this );
-  if ( dialog.exec() == QDialog::Accepted ) print( &printer );*/
+
 }
 
 /*************************************** print ***************************************/
 
 void  MainWindow::print( QPrinter* printer )
 {
-  // create painter for drawing print page
-  /*QPainter painter( printer );
-  int      w = printer->pageRect().width();
-  int      h = printer->pageRect().height();
-  QRect    page( 0, 0, w, h );
 
-  // create a font appropriate to page size
-  QFont    font = painter.font();
-  font.setPixelSize( (w+h) / 100 );
-  painter.setFont( font );
-
-  // draw labels in corners of page
-  painter.drawText( page, Qt::AlignTop    | Qt::AlignLeft, "QSimulate" );
-  painter.drawText( page, Qt::AlignBottom | Qt::AlignLeft, QString(getenv("USERNAME")) );
-  painter.drawText( page, Qt::AlignBottom | Qt::AlignRight,
-                    QDateTime::currentDateTime().toString( Qt::DefaultLocaleShortDate ) );
-
-  // draw simulated landscape
-  page.adjust( w/20, h/20, -w/20, -h/20 );
-  m_scene->render( &painter, page );*/
 }
 
 /************************************** fileNew **************************************/
@@ -290,22 +198,4 @@ void  MainWindow::closeEvent( QCloseEvent* event )
     return;
   }
 
-  // check if user wants to save before quitting
- /* while (true)
-    switch ( QMessageBox::warning( this, "QSimulate",
-        "Do you want to save before you quit?",
-        QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel ) )
-    {
-      case QMessageBox::Save:
-        // if save not successful ask again
-        if ( !fileSaveAs() ) break;
-
-      case QMessageBox::Discard:
-        event->accept();
-        return;
-
-      default:    // "Cancel"
-        event->ignore();
-        return;
-    }*/
 }

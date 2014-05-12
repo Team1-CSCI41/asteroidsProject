@@ -52,19 +52,7 @@ public:
   void generateAsteroids();
   void generateBullets();
   bool alive;
-/*
-  qreal           stationX;
-  qreal           stationY;
-  qreal           asteroidX;
-  qreal           asteroidY;
-  qreal           bulletX;
-  qreal           bulletY;
-  qreal           bulletMoveX;
-  qreal           bulletMoveY;
-  qreal           asteroidMoveX;
-  qreal           asteroidMoveY ;
-  qreal           xDest, yDest;
-*/
+
 
 
 signals:
